@@ -1,3 +1,3 @@
-Sample.Name,path.fwdReads,path.revReads,MNase.U
-H4_1.5U,"${projectDir}/toyData/H4_1.5U/H4_1.5U_sub_1.fq.gz","${projectDir}/toyData/H4_1.5U/H4_1.5U_sub_2.fq.gz",1.5
-H4_25U,"${projectDir}/toyData/H4_25U/H4_25U_sub_1.fq.gz","${projectDir}/toyData/H4_25U/H4_25U_sub_2.fq.gz",25 
+Sample_Name,path_fwdReads,path_revReads,MNase_U
+H4_1.5U,/toyData/H4_1.5U/H4_1.5U_sub_1.fq.gz,/toyData/H4_1.5U/H4_1.5U_sub_2.fq.gz,1.5
+H4_25U,/toyData/H4_25U/H4_25U_sub_1.fq.gz,/toyData/H4_25U/H4_25U_sub_2.fq.gz,25
