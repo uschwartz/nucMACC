@@ -47,10 +47,14 @@ Channel
 samples_fwd_ch.join(samples_rev_ch).set{samplePair_ch}
 samples_fwd_ch.mix(samples_rev_ch).set{sampleSingle_ch}
 
-
+// load modules
+//fastqc
 include{fastqc; multiqc} from './modules/raw_qc'
+//alignment to ref genome
+include{alignment} from './modules/align'
 
 workflow{
   fastqc(sampleSingle_ch)
   multiqc(fastqc.out.collect())
+  alignment(samplePair_ch)
 }
