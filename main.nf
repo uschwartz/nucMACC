@@ -48,21 +48,9 @@ samples_fwd_ch.join(samples_rev_ch).set{samplePair_ch}
 samples_fwd_ch.mix(samples_rev_ch).set{sampleSingle_ch}
 
 
-process fastqc{
-  echo true
-
-  input:
-  tuple val(sampleID), file(read)
-
-  output:
-  stdout
-
-  script:
-  """
-  fastqc $read
-  """
-}
+include{fastqc; multiqc} from './modules/raw_qc'
 
 workflow{
   fastqc(sampleSingle_ch)
+  multiqc(fastqc.out.collect())
 }
