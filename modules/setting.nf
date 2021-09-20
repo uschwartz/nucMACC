@@ -11,6 +11,7 @@ def settings() {
                   Path variables used in analysis
                   csvInput :    ${params.csvInput}
                   outDir   :    ${params.outDir}
+                  genomeIdx:    ${params.genomeIdx}
 
                   General options
 
