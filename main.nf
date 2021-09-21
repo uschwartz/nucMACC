@@ -55,6 +55,6 @@ include{alignment} from './modules/align'
 
 workflow{
   fastqc(sampleSingle_ch)
-  multiqc(fastqc.out.collect())
   alignment(samplePair_ch)
+  multiqc(fastqc.out[0].mix(alignment.out[0]).collect())
 }
