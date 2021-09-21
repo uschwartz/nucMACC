@@ -1,5 +1,4 @@
 process alignment{
-  echo true
   label 'big'
   publishDir "${params.outDir}/RUN/02_ALIGNMENT", mode: 'copy', pattern: "*_alignment_stats.txt"
 
@@ -9,7 +8,7 @@ process alignment{
 
   output:
   file "*_alignment_stats.txt"
-  file "*_aligned.bam"
+  tuple val(sampleID), file("*_aligned.bam")
 
   script:
   """

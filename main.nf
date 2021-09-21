@@ -57,4 +57,5 @@ workflow{
   fastqc(sampleSingle_ch)
   alignment(samplePair_ch)
   multiqc(fastqc.out[0].mix(alignment.out[0]).collect())
+  alignment.out[1].view()
 }

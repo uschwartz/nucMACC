@@ -9,3 +9,4 @@ dependencies:
   - bioconda::multiqc=1.9
   - bioconda::bowtie2=2.4.4
   - bioconda::samtools=1.9
+  - bioconda::qualimap=2.2.2b
