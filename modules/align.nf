@@ -1,4 +1,5 @@
 process alignment{
+  echo true
   label 'big'
   publishDir "${params.outDir}/RUN/02_ALIGNMENT", mode: 'copy', pattern: "*_alignment_stats.txt"
 
@@ -22,7 +23,9 @@ process alignment{
   -1 $read1 \
   -2 $read2 \
   2> ${sampleID}_alignment_stats.txt \
-  | samtools view -bS -f 2 -@ $task.cpus - > ${sampleID}"_aligned.bam"
+  | samtools view -bS -q 30 -f 2 -@ $task.cpus - | samtools sort -@ $task.cpus - > ${sampleID}"_aligned.bam"
+
+  samtools index -b ${sampleID}"_aligned.bam"
   """
 
 }
