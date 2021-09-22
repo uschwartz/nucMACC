@@ -10,3 +10,8 @@ nextflow run  ~/00_scripts/nextflow/nucMACC -resume
 cd ~/00_scripts/nextflow/nucMACC/docker/common
 
 docker build -t uschwartz/nucmacc:latest .
+
+
+cd ~/00_scripts/nextflow/nucMACC/docker/qualimap
+
+docker build -t uschwartz/qualimap:latest .
