@@ -1,17 +1,17 @@
 process qualimap {
-  echo true
-  //label 'big'
-  //publishDir "${params.outDir}/RUN/02_ALIGNMENT", mode: 'copy', pattern: "*_alignment_stats.txt"
+
+  container 'uschwartz/qualimap'
+  label 'mid'
+  publishDir "${params.outDir}/RUN/03_QUALIMAP", mode: 'copy'
 
   input:
   tuple val(sampleID), file(bam)
 
-  //output:
+  output:
+  file "${sampleID}"
 
   script:
   """
-  qualimap --help
+  qualimap bamqc --java-mem-size=16G -bam $bam -c -outdir ${sampleID}
   """
 }
-
-//qualimap bamqc --java-mem-size=16G -bam $bam -c -outdir ${sampleID} 

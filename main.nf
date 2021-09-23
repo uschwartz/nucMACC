@@ -27,15 +27,12 @@ nextflow.enable.dsl = 2
 
  //                      workflow
 
-
-
 Channel
     .fromPath(params.csvInput)
     .splitCsv(header:true)
     .map{ row -> tuple(row.Sample_Name,
       file(params.project.concat(row.path_fwdReads)))}
     .set{samples_fwd_ch}
-
 
 Channel
       .fromPath(params.csvInput)
@@ -52,10 +49,12 @@ samples_fwd_ch.mix(samples_rev_ch).set{sampleSingle_ch}
 include{fastqc; multiqc} from './modules/raw_qc'
 //alignment to ref genome
 include{alignment} from './modules/align'
+//qualimap after alignment
+include{qualimap} from './modules/qualimap'
 
 workflow{
   fastqc(sampleSingle_ch)
   alignment(samplePair_ch)
-  multiqc(fastqc.out[0].mix(alignment.out[0]).collect())
-  alignment.out[1].view()
+  qualimap(alignment.out[1])
+  multiqc(fastqc.out[0].mix(alignment.out[0]).mix(qualimap.out).collect())
 }
