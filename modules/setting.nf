@@ -14,6 +14,7 @@ def settings() {
                   genomeIdx:    ${params.genomeIdx}
 
                   General options
+                  blacklist:    ${params.blacklist}
 
 
                   """.stripIndent()

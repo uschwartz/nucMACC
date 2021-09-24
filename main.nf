@@ -51,10 +51,14 @@ include{fastqc; multiqc} from './modules/raw_qc'
 include{alignment} from './modules/align'
 //qualimap after alignment
 include{qualimap} from './modules/qualimap'
+// filtering sizes using alignmentSieve
+include{sieve_mono; sieve_sub} from './modules/alignmentsieve'
 
 workflow{
   fastqc(sampleSingle_ch)
   alignment(samplePair_ch)
   qualimap(alignment.out[1])
+  sieve_mono(alignment.out[1])
+  sieve_sub(alignment.out[1])
   multiqc(fastqc.out[0].mix(alignment.out[0]).mix(qualimap.out).collect())
 }

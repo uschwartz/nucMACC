@@ -28,4 +28,3 @@ process alignment{
   """
 
 }
-  // | samtools view -bS -f 2 -@ $task.cpus - > ${sampleID}"_aligned.bam
