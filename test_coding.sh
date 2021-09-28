@@ -17,3 +17,7 @@ docker build -t uschwartz/nucmacc:latest .
 cd ~/00_scripts/nextflow/nucMACC/docker/qualimap
 
 docker build -t uschwartz/qualimap:latest .
+
+cd ~/00_scripts/nextflow/nucMACC/docker/danpos
+
+docker build -t uschwartz/danpos:latest .

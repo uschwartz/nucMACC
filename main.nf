@@ -53,6 +53,11 @@ include{alignment} from './modules/align'
 include{qualimap} from './modules/qualimap'
 // filtering sizes using alignmentSieve
 include{sieve_mono; sieve_sub} from './modules/alignmentsieve'
+// prepare for DANPOS
+include{pool} from './modules/prepareDANPOS'
+// DANPOS run
+include{danpos_mono} from './modules/DANPOS'
+
 
 workflow{
   fastqc(sampleSingle_ch)
@@ -61,4 +66,6 @@ workflow{
   sieve_mono(alignment.out[1])
   sieve_sub(alignment.out[1])
   multiqc(fastqc.out[0].mix(alignment.out[0]).mix(qualimap.out).collect())
+  pool(sieve_mono.out[1].map{name,bam -> file(bam)}.collect())
+  danpos_mono(pool.out)
 }
