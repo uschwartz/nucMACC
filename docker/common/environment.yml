@@ -10,3 +10,4 @@ dependencies:
   - bioconda::bowtie2=2.4.4
   - bioconda::samtools=1.9
   - bioconda::deeptools=3.5.1
+  - bioconda::ucsc-wigtobigwig=377

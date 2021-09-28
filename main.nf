@@ -67,5 +67,5 @@ workflow{
   sieve_sub(alignment.out[1])
   multiqc(fastqc.out[0].mix(alignment.out[0]).mix(qualimap.out).collect())
   pool(sieve_mono.out[1].map{name,bam -> file(bam)}.collect())
-  danpos_mono(pool.out[0])
+  danpos_mono(pool.out[0], pool.out[1])
 }
