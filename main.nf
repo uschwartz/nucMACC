@@ -77,6 +77,9 @@ include{sieve_mono; sieve_sub} from './modules/alignmentsieve'
 include{pool} from './modules/prepareDANPOS'
 // DANPOS run
 include{danpos_mono; danpos_sub} from './modules/DANPOS'
+// convert DANPOS output
+include{convert2saf_mono} from './modules/convert2saf'
+
 
 
 workflow{
@@ -90,4 +93,5 @@ workflow{
   pool(sieve_mono.out[1].map{name,bam -> file(bam)}.collect())
   danpos_mono(sieve_mono.out[1].mix(pool.out[0]), pool.out[1])
   danpos_sub(sieve_sub.out[1], pool.out[1])
+  convert2saf_mono(danpos_mono.out[1].join(pool.out[0]))
 }
