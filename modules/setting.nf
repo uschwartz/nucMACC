@@ -12,6 +12,7 @@ def settings() {
                   csvInput :    ${params.csvInput}
                   outDir   :    ${params.outDir}
                   genomeIdx:    ${params.genomeIdx}
+                  genome:       ${params.genome}
 
                   General options
                   blacklist:    ${params.blacklist}
