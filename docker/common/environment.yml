@@ -11,3 +11,4 @@ dependencies:
   - bioconda::samtools=1.9
   - bioconda::deeptools=3.5.1
   - bioconda::ucsc-wigtobigwig=377
+  - bioconda::subread=2.0.1
