@@ -78,22 +78,28 @@ include{pool} from './modules/prepareDANPOS'
 // DANPOS run
 include{danpos_mono; danpos_sub} from './modules/DANPOS'
 // convert DANPOS output
-include{convert2saf_mono} from './modules/convert2saf'
+include{convert2saf_mono; convert2saf_sub} from './modules/convert2saf'
 // get read count per nucleosome
-include{featureCounts_mono} from './modules/featureCounts'
+include{featureCounts_mono; featureCounts_sub} from './modules/featureCounts'
 
 
 workflow{
-  min_conc_sample.view()
   fastqc(sampleSingle_ch)
   alignment(samplePair_ch)
   qualimap(alignment.out[1])
+
+  // monoNucs
   sieve_mono(alignment.out[1])
-  sieve_sub(alignment.out[1])
-  multiqc(fastqc.out[0].mix(alignment.out[0]).mix(qualimap.out).collect())
   pool(sieve_mono.out[1].map{name,bam -> file(bam)}.collect())
   danpos_mono(sieve_mono.out[1].mix(pool.out[0]), pool.out[1])
-  danpos_sub(sieve_sub.out[1], pool.out[1])
   convert2saf_mono(danpos_mono.out[1].join(pool.out[0]))
   featureCounts_mono(convert2saf_mono.out[1], sieve_mono.out[1].map{name,bam -> file(bam)}.collect())
+
+  //subNucs
+  sieve_sub(alignment.out[1])
+  danpos_sub(sieve_sub.out[1], pool.out[1])
+  convert2saf_sub(danpos_sub.out[1].join(min_conc_sample).join(sieve_sub.out[1]))
+  featureCounts_sub(convert2saf_sub.out[1], sieve_sub.out[1].map{name,bam -> file(bam)}.collect())
+
+  multiqc(fastqc.out[0].mix(alignment.out[0]).mix(qualimap.out).collect())
 }
