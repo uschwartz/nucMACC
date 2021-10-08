@@ -48,16 +48,14 @@ if(params.test){
         Channel
             .fromPath(params.csvInput)
             .splitCsv(header:true)
-            .map{ row -> tuple(row.Sample_Name,
-              file(row.path_fwdReads))}
+            .map{ row -> tuple(row.Sample_Name,file(row.path_fwdReads))}
             .set{samples_fwd_ch}
 
         // reverse reads
         Channel
               .fromPath(params.csvInput)
               .splitCsv(header:true)
-              .map{ row -> tuple(row.Sample_Name,
-                 file(row.path_revReads))}
+              .map{ row -> tuple(row.Sample_Name,file(row.path_revReads))}
               .set{samples_rev_ch}
 }
 
