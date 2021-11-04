@@ -68,7 +68,7 @@ samples_fwd_ch.join(samples_rev_ch).set{samplePair_ch}
 Channel
       .fromPath(params.csvInput)
       .splitCsv(header:true)
-      .map{ row -> tuple(row.MNase_U,row.Sample_Name)}
+      .map{ row -> tuple(row.MNase_U.toDouble(),row.Sample_Name)}
       .set{samples_conc}
 
 //get lowest MNase digest

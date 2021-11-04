@@ -11,9 +11,9 @@ process convert2saf_mono{
   script:
   """
   echo -e "GeneID\tChr\tStart\tEnd\tStrand\tPeak_score" > $sampleID"_nucPositions.saf"
-  awk -v OFS='\t' 'NR > 1  {print "nuc"NR,\$1,\$2,\$3,".",\$5}' \
+  awk -v OFS='\t' 'NR > 1 && \$2 > 0 {print "nuc"NR,\$1,\$2,\$3,".",\$5}' \
    $xls >> $sampleID"_nucPositions.saf"
-  awk -v OFS='\t' 'NR > 1 {print \$1,\$2,\$3,"nuc"NR,\$5,"."}' $xls \
+  awk -v OFS='\t' 'NR > 1 && \$2 > 0 {print \$1,\$2,\$3,"nuc"NR,\$5,"."}' $xls \
   >> $sampleID"_nucPositions.bed"
   """
 }
@@ -31,9 +31,9 @@ process convert2saf_sub{
   script:
   """
   echo -e "GeneID\tChr\tStart\tEnd\tStrand\tPeak_score" > $sampleID"_sub-nucPositions.saf"
-  awk -v OFS='\t' 'NR > 1  {print "nuc"NR,\$1,\$2,\$3,".",\$5}' \
+  awk -v OFS='\t' 'NR > 1 && \$2 > 0 {print "nuc"NR,\$1,\$2,\$3,".",\$5}' \
    $xls >> $sampleID"_sub-nucPositions.saf"
-  awk -v OFS='\t' 'NR > 1 {print \$1,\$2,\$3,"nuc"NR,\$5,"."}' $xls \
+  awk -v OFS='\t' 'NR > 1 && \$2 > 0 {print \$1,\$2,\$3,"nuc"NR,\$5,"."}' $xls \
   >> $sampleID"_sub-nucPositions.bed"
   """
 }
