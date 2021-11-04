@@ -24,10 +24,21 @@ process featureCounts_mono{
         gc_c=\$((\$numb+1))
 
 
+        #get GC content of called nucleosomes
         awk -v OFS='\t' 'NR > 2 {for(i=2;i<=NF;++i)printf \$i""FS; print}' monoNucs_readCounts.csv | cut -f 2- \
         | bedtools nuc -fi $params.genome -bed - | cut -f 1-\$last_c,\$gc_c \
-        > monoNucs_readCounts_wGC.csv
+        | awk -v OFS='\t' 'NR > 1 {print}'  > pre_monoNucs_readCounts_wGC.csv
 
+        #add nucID
+        awk -v OFS='\t' 'NR > 2 {print \$1}' monoNucs_readCounts.csv \
+        | paste pre_monoNucs_readCounts_wGC.csv - >pre_monoNucs_readCounts_wGC_ext.csv
+
+        #prepare header
+        awk -v OFS='\t' 'FNR == 2 {print}' monoNucs_readCounts.csv | cut -f 2-\$numb > header_featureCounts.csv
+        echo "GC_cont\tnucID" | paste header_featureCounts.csv - > header_all.csv
+
+        #add header
+        cat header_all.csv  pre_monoNucs_readCounts_wGC_ext.csv > monoNucs_readCounts_wGC.csv
 
         """
 }
@@ -58,11 +69,21 @@ process featureCounts_sub{
         last_c=\$((\$numb-1))
         gc_c=\$((\$numb+1))
 
-
+        #get GC content of called nucleosomes
         awk -v OFS='\t' 'NR > 2 {for(i=2;i<=NF;++i)printf \$i""FS; print}' subNucs_readCounts.csv | cut -f 2- \
         | bedtools nuc -fi $params.genome -bed - | cut -f 1-\$last_c,\$gc_c \
-        > subNucs_readCounts_wGC.csv
+        | awk -v OFS='\t' 'NR > 1 {print}'  > pre_subNucs_readCounts_wGC.csv
 
+        #add nucID
+        awk -v OFS='\t' 'NR > 2 {print \$1}' subNucs_readCounts.csv \
+        | paste pre_subNucs_readCounts_wGC.csv - >pre_subNucs_readCounts_wGC_ext.csv
+
+        #prepare header
+        awk -v OFS='\t' 'FNR == 2 {print}' subNucs_readCounts.csv | cut -f 2-\$numb > header_featureCounts.csv
+        echo "GC_cont\tnucID" | paste header_featureCounts.csv - > header_all.csv
+
+        #add header
+        cat header_all.csv  pre_subNucs_readCounts_wGC_ext.csv > subNucs_readCounts_wGC.csv
 
         """
 }
