@@ -16,6 +16,7 @@ process featureCounts_mono{
         """
         featureCounts  -F SAF -a $saf \
         -o monoNucs_readCounts.csv \
+        --fracOverlap 0.7 \
         -T $task.cpus -p -B --largestOverlap \
         $monoNucs
 
@@ -63,6 +64,7 @@ process featureCounts_sub{
         """
         featureCounts  -F SAF -a $saf \
         -o subNucs_readCounts.csv \
+        --fracOverlap 0.7 \
         -T $task.cpus -p -B --largestOverlap \
         $subNucs
 
