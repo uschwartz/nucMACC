@@ -1,0 +1,16 @@
+name: nucMACC
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+
+## conda-forge
+ - conda-forge::r-base=4.1.1
+ - conda-forge::r-lsd=4.1_0
+
+ ## bioconda packages
+ - bioconda::bioconductor-edger=3.36.0
+ - bioconda::bioconductor-limma=3.50.0
+ - bioconda::ucsc-bedgraphtobigwig=357
+ - bioconda::bioconductor-rtracklayer=1.54.0

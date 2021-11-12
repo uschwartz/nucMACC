@@ -10,6 +10,7 @@ process featureCounts_mono{
 
         output:
         file("monoNucs_readCounts_wGC.csv")
+        file("monoNucs_readCounts.csv.summary")
 
         script:
         """
@@ -56,6 +57,7 @@ process featureCounts_sub{
 
         output:
         file("subNucs_readCounts_wGC.csv")
+        file("subNucs_readCounts.csv.summary")
 
         script:
         """

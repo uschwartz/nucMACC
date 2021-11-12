@@ -97,6 +97,8 @@ include{danpos_mono; danpos_sub} from './modules/DANPOS'
 include{convert2saf_mono; convert2saf_sub} from './modules/convert2saf'
 // get read count per nucleosome
 include{featureCounts_mono; featureCounts_sub} from './modules/featureCounts'
+// get nucMACC_scores
+include{nucMACC_scores;sub_nucMACC_scores} from './modules/nucMACC_scores'
 
 
 workflow{
@@ -118,4 +120,11 @@ workflow{
   featureCounts_sub(convert2saf_sub.out[1], sieve_sub.out[1].map{name,bam -> file(bam)}.collect())
 
   multiqc(fastqc.out[0].mix(alignment.out[0]).mix(qualimap.out).collect())
+
+  //nucMACC scores
+  nucMACC_scores(featureCounts_mono.out[0], Channel.fromPath(params.csvInput))
+
+  //subMACC scores
+  sub_nucMACC_scores(featureCounts_sub.out[0], Channel.fromPath(params.csvInput),min_conc_sample, nucMACC_scores.out[2],featureCounts_mono.out, featureCounts_sub.out[1])
+  //min_conc_sample.view()
 }
