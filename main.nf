@@ -122,7 +122,7 @@ workflow{
   multiqc(fastqc.out[0].mix(alignment.out[0]).mix(qualimap.out).collect())
 
   //nucMACC scores
-  nucMACC_scores(featureCounts_mono.out[0], Channel.fromPath(params.csvInput))
+  nucMACC_scores(featureCounts_mono.out[0], Channel.fromPath(params.csvInput),featureCounts_mono.out[1])
 
   //subMACC scores
   sub_nucMACC_scores(featureCounts_sub.out[0], Channel.fromPath(params.csvInput),min_conc_sample, nucMACC_scores.out[2],featureCounts_mono.out, featureCounts_sub.out[1])

@@ -54,8 +54,14 @@ real.subNucs <- count.table[idx.raw,]
 
 ### READ COUNT NORMALIZATION
 
-x <- DGEList(counts=real.subNucs)      #Makes a list for edgeR
-normCounts <- cpm(x)              #Counts per million (normalization based on library size)
+#get normalization factors for CPMs
+normFactor<-apply(featureCounts.sub[,c(-1)],2,sum)/1e6
+
+#Counts per million (normalization based on library size)
+normCounts<-t(t(real.subNucs)/normFactor[match(colnames(real.subNucs),
+                                               names(normFactor))]) 
+
+### REGRESSION
 
 #get corresponding MNase conc
 mx<-match(colnames(normCounts), input$Sample_Name)
@@ -135,7 +141,7 @@ dev.off()
 
 #### PLOT OF CORRELATION AFTER THE GC NORMALIZATION
 png("Figures/after_gc_norm_finalPlot.png", width = 1280, height = 1280, res =300 )
-    heatscatter(x=gc.filt[ord], y=(slope.filt[ord])-(predict.slope[ord]),
+    heatscatter(x=gc.filt[ord], y=(slope.filt[ord])-(predict.slope[ord]-median(slope.filt)),
                 cor=T,cexplot=0.5, ylab="sub-nucMACC scores",
                 xlab="GC content")
     abline(h=0,col="black",lwd=3,lty=2)
@@ -143,7 +149,7 @@ dev.off()
 
 
 # GC normalize sub-nucMACC scores
-sub_nucMACC_scores <- slope.filt-predict.slope
+sub_nucMACC_scores <- slope.filt-(predict.slope-median(slope.filt))
 
 
 ########################################
@@ -176,7 +182,7 @@ nuc.gr<-GRanges(nucStats)
 
 # get unique subnuc positions
 subNucs_unique  <- subsetByOverlaps(subnuc.gr,nuc.gr,
-                                    minoverlap = 100,invert=TRUE)
+                                    minoverlap = 70,invert=TRUE)
 
 
 ###################################################################
@@ -184,7 +190,7 @@ subNucs_unique  <- subsetByOverlaps(subnuc.gr,nuc.gr,
 ###################################################################
 
 ## overlapping
-ovrlp<-findOverlaps(subnuc.gr,nuc.gr, minoverlap = 100)
+ovrlp<-findOverlaps(subnuc.gr,nuc.gr, minoverlap = 70)
 sub.nucMACC.ovrl<-subnuc.gr[ovrlp@from]
 nucMACC.ovrl<-nuc.gr[ovrlp@to]
 

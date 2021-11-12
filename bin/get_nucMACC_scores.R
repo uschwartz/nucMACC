@@ -1,8 +1,6 @@
 #!/usr/bin/env Rscript
 
 #### PACKAGE LOADING ####
-library(edgeR)
-library(limma)
 library(LSD)
 
 ######## DATA LOADING ###########
@@ -13,6 +11,11 @@ input<-read.csv(file=args[1])
 
 ## read count table
 readCounts <- read.delim(file = args[2],header = T)
+
+
+#get total counts statistics
+featureCounts.mono<-read.delim(file=args[3])
+colnames(featureCounts.mono)<-gsub("_mono.bam", "", colnames(featureCounts.mono))
 
 dir.create("Figures", showWarnings = FALSE)
 
@@ -35,9 +38,14 @@ idx.raw<-apply(count.table,1,sum)>raw.flt
 realNucs <- count.table[idx.raw,]
 
 ### READ COUNT NORMALIZATION
+#get normalization factors for CPMs
+normFactor<-apply(featureCounts.mono[,c(-1)],2,sum)/1e6
 
-x <- DGEList(counts=realNucs)      #Makes a list for edgeR
-normCounts <- cpm(x)              #Counts per million (normalization based on library size)
+#Counts per million (normalization based on library size)
+normCounts<-t(t(realNucs)/normFactor[match(colnames(realNucs),
+                                               names(normFactor))]) 
+
+
 
 #get corresponding MNase conc
 mx<-match(colnames(normCounts), input$Sample_Name)
@@ -116,7 +124,7 @@ dev.off()
 
 #### PLOT OF CORRELATION AFTER THE GC NORMALIZATION
 png("Figures/after_gc_norm_finalPlot.png", width = 1280, height = 1280, res =300 )
-    heatscatter(x=gc.filt[ord], y=(slope.filt[ord])-(predict.slope[ord]),
+    heatscatter(x=gc.filt[ord], y=(slope.filt[ord])-(predict.slope[ord]-median(slope.filt)),
                 cor=T,cexplot=0.5, ylab="nucMACC scores", xlab="GC content")
     abline(h=0,col="black",lwd=3,lty=2)
 dev.off()
@@ -124,7 +132,7 @@ dev.off()
 
 
 # GC normalize nucMACC scores
-nucMACC_scores <- slope.filt-predict.slope
+nucMACC_scores <- slope.filt-(predict.slope-median(slope.filt))
 
 ########################################################
 ########## get hypo- and hyper-accessible Nucs #########

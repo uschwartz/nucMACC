@@ -6,7 +6,7 @@ process nucMACC_scores{
   input:
   file(readCounts)
   file(input)
-
+  file(counts_sum_mono)
 
   output:
   file("Figures/*.png")
@@ -17,7 +17,7 @@ process nucMACC_scores{
 
   script:
   """
-  get_nucMACC_scores.R $input $readCounts
+  get_nucMACC_scores.R $input $readCounts $counts_sum_mono
   """
 }
 
