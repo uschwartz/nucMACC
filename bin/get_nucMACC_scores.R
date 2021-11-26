@@ -147,7 +147,8 @@ nucMACC_rank <- rank(nucMACC_sort, ties.method = "first")/length(nucMACC_sort)
 
 ### get LOESS smoothing function
 #define to take 1000 nucleosomes as window for loess
-span.loess<-1000/length(nucMACC_scores)
+span.loess.pre<-1000/length(nucMACC_scores)
+span.loess<-ifelse(span.loess.pre<0.05, span.loess.pre, 0.05)
 lm <- loess(nucMACC_norm~nucMACC_rank,span=span.loess)
 
 #Curve fitting
@@ -182,8 +183,12 @@ png("Figures/nucMACC_selection.png",
 dev.off()
 
 ### select the nucs with nucMACC scores deviating from the mean
-nucMACC_low <- nucMACC_scores < nucMACC_sort[cutOff1]
-nucMACC_high <- nucMACC_scores > nucMACC_sort[cutOff2]
+#scores need to be positive or negative 
+cutoff.low<-min(c(nucMACC_sort[cutOff1],0))
+cutoff.high<-max(c(nucMACC_sort[cutOff2],0))
+
+nucMACC_low <- nucMACC_scores < cutoff.low
+nucMACC_high <- nucMACC_scores > cutoff.high
 
 
 ### generate data table

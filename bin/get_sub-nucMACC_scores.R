@@ -1,8 +1,6 @@
 #!/usr/bin/env Rscript
 
 #### PACKAGE LOADING ####
-library(edgeR)
-library(limma)
 library(LSD)
 library(rtracklayer)
 
@@ -49,7 +47,7 @@ colnames(count.table)<-gsub("_sub.bam", "", colnames(count.table))
 raw.flt<-5
 
 #filter
-idx.raw<-count.table[,lowest.cond]>raw.flt
+idx.raw<-count.table[,lowest.cond]>=raw.flt
 real.subNucs <- count.table[idx.raw,]
 
 ### READ COUNT NORMALIZATION
@@ -161,7 +159,7 @@ subnucStats.full<-cbind(readCounts[,c("Chr", "Start","End", "Strand","GC_cont", 
                                                             names(sub_nucMACC_scores))],
                      regr.results[match(readCounts$nucID,rownames(regr.results)),])
 
-#list filtered by raw read count
+#list filtered by raw read count and GC
 subnucStats<-subnucStats.full[!is.na(subnucStats.full$sub.nucMACC),]
 
 #export sub-nucMACC as bedgraph
@@ -222,7 +220,7 @@ enriched.sub<-names(ratio)[ratio>2]
 ########################################################
 #filter relevant subnucleosomes
 selected.subNucs<-c(enriched.sub,as.character(subNucs_unique$nucID)) # subnucs selected
-sub_nucMACC_scores.select<-sub_nucMACC_scores[selected.subNucs]
+sub_nucMACC_scores.select<-sub_nucMACC_scores #[selected.subNucs]
 
 # prepare for calling
 # normalize nucMACC scores to maximum 1
@@ -233,7 +231,8 @@ sub_nucMACC_rank <- rank(sub_nucMACC_sort, ties.method = "first")/length(sub_nuc
 
 ### get LOESS smoothing function
 #define to take 1000 nucleosomes as window for loess
-span.loess<-1000/length(sub_nucMACC_scores)
+span.loess.pre<-1000/length(sub_nucMACC_scores)
+span.loess<-ifelse(span.loess.pre<0.05, span.loess.pre, 0.05)
 lm <- loess(sub_nucMACC_norm~sub_nucMACC_rank,span=span.loess)
 
 #Curve fitting
@@ -268,9 +267,19 @@ png("Figures/nucMACC_selection.png",
     lines(sub_nucMACC_rank,loess.line, col="#D95F02")
 dev.off()
 
+
+
 ### select the nucs with nucMACC scores deviating from the mean
-sub_nucMACC_low <- sub_nucMACC_scores.select < sub_nucMACC_sort[cutOff1]
-sub_nucMACC_high <- sub_nucMACC_scores.select > sub_nucMACC_sort[cutOff2]
+#scores need to be positive or negative 
+cutoff.low<-min(c(sub_nucMACC_sort[cutOff1],0))
+cutoff.high<-max(c(sub_nucMACC_sort[cutOff2],0))
+
+sub_nucMACC_low.pre <- sub_nucMACC_scores.select < cutoff.low
+sub_nucMACC_high.pre <- sub_nucMACC_scores.select > cutoff.high
+
+
+sub_nucMACC_low <- sub_nucMACC_low.pre & (names(sub_nucMACC_low.pre) %in% selected.subNucs)
+sub_nucMACC_high <- sub_nucMACC_high.pre & (names(sub_nucMACC_high.pre) %in% selected.subNucs)
 
 ### generate data table
 df<-data.frame(nucID=names(sub_nucMACC_scores), sub.nucMACC=sub_nucMACC_scores)
