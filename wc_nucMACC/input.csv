@@ -1,6 +1,4 @@
 Sample_Name,path_fwdReads,path_revReads,MNase_U
-SRR3211621_rep1_100U,/home/fabian/NGS_Test/SRR3211621_1_rep1_100U.fastq.gz,/home/fabian/NGS_Test/SRR3211621_2_rep1_100U.fastq.gz,100
-SRR3211622_rep1_25U,/home/fabian/NGS_Test/SRR3211622_1_rep1_25U.fastq.gz,/home/fabian/NGS_Test/SRR3211622_2_rep1_25U.fastq.gz,25
 SRR3211621_rep1_100U,/Users/mac-pro3/Analysis/wc_nucMACC/data/results/fastq/SRR3211621_1_rep1_100U.fastq.gz,/Users/mac-pro3/Analysis/wc_nucMACC/data/results/fastq/SRR3211621_2_rep1_100U.fastq.gz,100
 SRR3211622_rep1_25U,/Users/mac-pro3/Analysis/wc_nucMACC/data/results/fastq/SRR3211622_1_rep1_25U.fastq.gz,/Users/mac-pro3/Analysis/wc_nucMACC/data/results/fastq/SRR3211622_2_rep1_25U.fastq.gz,25
 SRR3211623_rep1_6.25U,/Users/mac-pro3/Analysis/wc_nucMACC/data/results/fastq/SRR3211623_1_rep1_6.25U.fastq.gz,/Users/mac-pro3/Analysis/wc_nucMACC/data/results/fastq/SRR3211623_2_rep1_6.25U.fastq.gz,6.25

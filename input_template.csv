@@ -1,3 +1,1 @@
 Sample_Name,path_fwdReads,path_revReads,MNase_U
-SRR3211621_rep1_100U,/home/fabian/NGS_Test/SRR3211621_1_rep1_100U.fastq.gz,/home/fabian/NGS_Test/SRR3211621_2_rep1_100U.fastq.gz,100
-SRR3211622_rep1_25U,/home/fabian/NGS_Test/SRR3211622_1_rep1_25U.fastq.gz,/home/fabian/NGS_Test/SRR3211622_2_rep1_25U.fastq.gz,25
