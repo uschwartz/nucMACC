@@ -8,6 +8,7 @@ dependencies:
 ## conda-forge
  - conda-forge::r-base=4.1.1
  - conda-forge::r-lsd=4.1_0
+ - conda-forge::r-rcolorbrewer=1.1_2
 
  ## bioconda packages
  - bioconda::bioconductor-edger=3.36.0
