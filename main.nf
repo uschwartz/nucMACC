@@ -87,6 +87,8 @@ include{fastqc; multiqc} from './modules/raw_qc'
 include{alignment} from './modules/align'
 //qualimap after alignment
 include{qualimap} from './modules/qualimap'
+//InsertSize_Histogram
+include{InsertSize_Histogram} from './modules/InsertSize_Histogram'
 // filtering sizes using alignmentSieve
 include{sieve_mono; sieve_sub} from './modules/alignmentsieve'
 // prepare for DANPOS
@@ -119,7 +121,9 @@ workflow{
   convert2saf_sub(danpos_sub.out[1].join(min_conc_sample).join(sieve_sub.out[1]))
   featureCounts_sub(convert2saf_sub.out[1], sieve_sub.out[1].map{name,bam -> file(bam)}.collect())
 
+  //QualityCheck
   multiqc(fastqc.out[0].mix(alignment.out[0]).mix(qualimap.out).collect())
+  InsertSize_Histogram(qualimap.out.collect())
 
   //nucMACC scores
   nucMACC_scores(featureCounts_mono.out[0], Channel.fromPath(params.csvInput),featureCounts_mono.out[1])
