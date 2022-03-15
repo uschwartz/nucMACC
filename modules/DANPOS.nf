@@ -11,6 +11,7 @@ process danpos_mono{
   file("*_monoNucs_profile.bw")
   tuple val(sampleID), file("result/pooled/*.xls")
 
+
   script:
   """
   danpos.py dpos $bam -m 1 --extend 70 -c $params.genomeSize \
