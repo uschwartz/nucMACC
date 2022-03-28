@@ -17,16 +17,18 @@ lab<-strsplit(as.character(heat.val$bin.labels), split = "_")
 
 #get conditions from profile
 conditions<-NULL
+names<-NULL
 for(i in 2:length(lab)){
   if(lab[[i]][1]=="pooled"){
     next
   }
 temp<-(lab[[i]][which(grepl( "U", lab[[i]], fixed = TRUE))])
 assign(paste("data.",temp, sep=""), grep(paste(temp),heat.val$bin.labels, value = T))
+names<-c(names,grep(paste(temp),heat.val$bin.labels, value = T))
 conditions<-c(conditions,paste("data.",temp, sep=""))
 }
 
-names <- gsub("data.","",conditions)
+names <- gsub("_subNucs_profile","",names)
 
 
 row.names(heat.val)<-as.character(heat.val$bin.labels)
@@ -65,8 +67,8 @@ for(i in 1:length(conditions)){
   }
 }
 
-pdf("profile_subNucs.pdf", width = 5, height=4)
-par(mar=c(5.1, 4.1, 4.1, 7.1))
+pdf("profile_subNucs.pdf", width = 7, height=4)
+par(mar=c(5.1, 4.1, 4.1, 11.8))
 for(i in 1:length(conditions)){
   if(i==1){
     plot(pos,
@@ -84,7 +86,7 @@ for(i in 1:length(conditions)){
   legend("topright",bty="n",
          legend=names, 
          col=dark2[1:length(conditions)], lwd=2,
-       inset=c(-0.5,0), xpd=TRUE)
+       inset=c(-0.63,0), xpd=TRUE)
 dev.off()
 
 

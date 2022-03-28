@@ -130,15 +130,16 @@ workflow{
   InsertSize_Histogram(qualimap.out.collect())
 
   //TSS_Profile_mono
+  if(params.TSS){
   TSS_profile_mono(danpos_mono.out[0].collect())
   TSS_profile_plot_mono(TSS_profile_mono.out[0])
   make_TSS_plots_monoNucs(TSS_profile_plot_mono.out[2])
-
-
   //TSS_Profile_sub
   TSS_profile_sub(danpos_sub.out[0].collect())
   TSS_profile_plot_sub(TSS_profile_sub.out[0])
   make_TSS_plots_subNucs(TSS_profile_plot_sub.out[2])
+  }
+
 
   //nucMACC scores
   nucMACC_scores(featureCounts_mono.out[0], Channel.fromPath(params.csvInput),featureCounts_mono.out[1])
