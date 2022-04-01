@@ -87,6 +87,8 @@ include{fastqc; multiqc} from './modules/raw_qc'
 include{alignment} from './modules/align'
 //qualimap after alignment
 include{qualimap} from './modules/qualimap'
+//InsertSize_Histogram
+include{InsertSize_Histogram} from './modules/InsertSize_Histogram'
 // filtering sizes using alignmentSieve
 include{sieve_mono; sieve_sub} from './modules/alignmentsieve'
 // prepare for DANPOS
@@ -99,6 +101,10 @@ include{convert2saf_mono; convert2saf_sub} from './modules/convert2saf'
 include{featureCounts_mono; featureCounts_sub} from './modules/featureCounts'
 // get nucMACC_scores
 include{nucMACC_scores;sub_nucMACC_scores} from './modules/nucMACC_scores'
+//deeptools TTS
+include{TSS_profile_mono;TSS_profile_plot_mono;TSS_profile_sub;TSS_profile_plot_sub} from './modules/get_TSS_profile'
+//TTS Profile monoNucs
+include{make_TSS_plots_monoNucs;make_TSS_plots_subNucs } from './modules/make_TSS_plots'
 
 
 workflow{
@@ -119,7 +125,21 @@ workflow{
   convert2saf_sub(danpos_sub.out[1].join(min_conc_sample).join(sieve_sub.out[1]))
   featureCounts_sub(convert2saf_sub.out[1], sieve_sub.out[1].map{name,bam -> file(bam)}.collect())
 
+  //QualityCheck
   multiqc(fastqc.out[0].mix(alignment.out[0]).mix(qualimap.out).collect())
+  InsertSize_Histogram(qualimap.out.collect())
+
+  //TSS_Profile_mono
+  if(params.TSS){
+  TSS_profile_mono(danpos_mono.out[0].collect())
+  TSS_profile_plot_mono(TSS_profile_mono.out[0])
+  make_TSS_plots_monoNucs(TSS_profile_plot_mono.out[2])
+  //TSS_Profile_sub
+  TSS_profile_sub(danpos_sub.out[0].collect())
+  TSS_profile_plot_sub(TSS_profile_sub.out[0])
+  make_TSS_plots_subNucs(TSS_profile_plot_sub.out[2])
+  }
+
 
   //nucMACC scores
   nucMACC_scores(featureCounts_mono.out[0], Channel.fromPath(params.csvInput),featureCounts_mono.out[1])

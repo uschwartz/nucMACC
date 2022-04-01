@@ -17,7 +17,7 @@ def settings() {
                   General options
                   blacklist:    ${params.blacklist}
                   genomeSize:   ${params.genomeSize}
-
+                  TSS:          ${params.TSS}
 
                   """.stripIndent()
 
