@@ -315,3 +315,10 @@ unStab<-subset(subnucStats, category=="un-stable")
 unStab_bed <- unStab[,c("Chr","Start","End","nucID","sub.nucMACC","Strand")]
 write.table(unStab_bed , file="unStable_subNucs.bed",
             row.names = FALSE, sep="\t", quote=FALSE, col.names = FALSE)
+
+#subnuc positions
+
+write.table(subnucStats[,
+                    c("Chr", "Start","End", "nucID", "sub.nucMACC", "Strand")],
+            file="positions_subNucs.bed",
+            row.names = FALSE, sep="\t", quote=FALSE, col.names = FALSE)

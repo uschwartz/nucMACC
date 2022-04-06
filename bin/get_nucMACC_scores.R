@@ -111,7 +111,7 @@ predict.slope <- predict(loess.slope, data.frame(x=gc.filt))
 predict.slope[is.na(predict.slope)] <- 0
 
 
-#### PLOT CORRELATION BEFORE THE GC NORMALIZATION with linar fit slope
+#### PLOT CORRELATION BEFORE THE GC NORMALIZATION with linear fit slope
 ord <- order(gc.filt)
 
 
@@ -231,5 +231,11 @@ nucStats.full<-cbind(readCounts[,c("Chr", "Start","End", "Strand","GC_cont", "nu
                      df[match(readCounts$nucID,df$nucID),c("nucMACC","category")],
                      regr.results[match(readCounts$nucID,rownames(regr.results)),])
 
-write.table(nucStats.full, file="nucMACC_result_table_allNucs.tsv",
+write.table(nucStats.full[idx.raw,], file="nucMACC_result_table_allNucs.tsv",
             row.names = FALSE, sep="\t", quote=FALSE,col.names = T)
+
+## export nucleosome positions
+write.table(nucStats.full[idx.raw,
+                          c("Chr", "Start","End", "nucID", "nucMACC", "Strand")],
+            file="positions_monoNucs.bed",
+            row.names = FALSE, sep="\t", quote=FALSE, col.names = FALSE)
