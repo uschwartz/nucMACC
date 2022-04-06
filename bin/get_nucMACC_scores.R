@@ -206,6 +206,12 @@ nucStats<-cbind(readCounts[match(df$nucID,readCounts$nucID),
 write.table(nucStats, file="nucMACC_result_table.tsv",
             row.names = FALSE, sep="\t", quote=FALSE,col.names = T)
 
+## export nucleosome positions
+write.table(nucStats[,
+                      c("Chr", "Start","End", "nucID", "nucMACC", "Strand")],
+            file="positions_monoNucs.bed",
+            row.names = FALSE, sep="\t", quote=FALSE, col.names = FALSE)
+
 #export nucMACC as bedgraph
 bedgraph <- nucStats[,c("Chr","Start","End","nucMACC")]
 write.table(bedgraph , file="nucMACC_scores.bedgraph",
@@ -231,11 +237,7 @@ nucStats.full<-cbind(readCounts[,c("Chr", "Start","End", "Strand","GC_cont", "nu
                      df[match(readCounts$nucID,df$nucID),c("nucMACC","category")],
                      regr.results[match(readCounts$nucID,rownames(regr.results)),])
 
-write.table(nucStats.full[idx.raw,], file="nucMACC_result_table_allNucs.tsv",
+write.table(nucStats.full, file="nucMACC_result_table_allNucs.tsv",
             row.names = FALSE, sep="\t", quote=FALSE,col.names = T)
 
-## export nucleosome positions
-write.table(nucStats.full[idx.raw,
-                          c("Chr", "Start","End", "nucID", "nucMACC", "Strand")],
-            file="positions_monoNucs.bed",
-            row.names = FALSE, sep="\t", quote=FALSE, col.names = FALSE)
+
