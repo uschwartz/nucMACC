@@ -27,15 +27,13 @@ profile.index<- (TSS.pos+start.plot/10):(TSS.pos+end.plot/10)
 for(i in names){
   curr_min<-min(heat.val[i,profile.index ])
   curr_max<-max(heat.val[i,profile.index ])
-  if(i==1){
+  if(i==names[1]){
     low<-curr_min
     high<-curr_max
   }
   else{
-    if(curr_min<low){
-      low<-curr_min
-      high<-curr_max
-    }
+      low<-min(curr_min,low)
+      high<-max(curr_max,high)
   }
 }
 
@@ -60,7 +58,7 @@ for(i in 1:length(names)){
 legend("topright",bty="n",
        legend=names, 
        col=dark2[1:length(names)], lwd=2,
-       inset=c(-0.63,0), xpd=TRUE)
+       inset=c(-0.37,0), xpd=TRUE)
 dev.off()
 
 

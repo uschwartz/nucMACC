@@ -13,6 +13,7 @@ process nucMACC_scores{
   tuple file("hyperAcc_monoNucs.bed"), file("hypoAcc_monoNucs.bed")
   file("nucMACC_result_table.tsv")
   file("nucMACC_scores.bedgraph")
+  file("positions_monoNucs.bed")
 
 
   script:
@@ -40,6 +41,7 @@ process sub_nucMACC_scores{
   tuple file("nonCanonical_subNucs.bed"), file("unStable_subNucs.bed")
   file("sub-nucMACC_result_table.tsv")
   file("sub-nucMACC_scores.bedgraph")
+  file("positions_subNucs.bed")
 
 
   script:

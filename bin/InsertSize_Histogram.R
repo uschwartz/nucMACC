@@ -71,16 +71,16 @@ pdf("InsertSizeHistogram.pdf",
 par(mar=c(6.1, 5.1, 5.1, 18.1),xpd=TRUE)
 for(i in 1:length(data)){
   if(i==1){
-    plot(data[[i]]$V1,data[[i]]$V2, type="l", col=dark2[i], ylim=c(0,high), xlim=c(55,500), ylab="Counts",xlab="Insert size [bp]", lwd=1.5)
+    plot(data[[i]]$V1,data[[i]]$V2, type="l", col=dark2[i], ylim=c(0,high), xlim=c(55,500), ylab="Counts",xlab="Insert size [bp]", lwd=2)
   }
   else{
-    lines(data[[i]]$V1,data[[i]]$V2, type="l", col=dark2[i],lwd=1.5)
+    lines(data[[i]]$V1,data[[i]]$V2, type="l", col=dark2[i],lwd=2)
   }
 }
 par(mar=c(6.1, 5.1, 5.1, 18.1),xpd=FALSE)
 abline(v=c(140,200), col="black", lty=2)
 par(mar=c(6.1, 5.1, 5.1, 18.1),xpd=TRUE)
-legend(550,1.1*high,legend=names, col=dark2[1:length(data)],lty = 1, cex = 0.8, bty="n", lwd=1.5)
+legend(550,1.1*high,legend=names, col=dark2[1:length(data)],lty = 1, cex = 0.8, bty="n", lwd=2)
 dev.off()
 
 pdf("InsertSizeHistogram_Fraction.pdf",
@@ -88,14 +88,14 @@ pdf("InsertSizeHistogram_Fraction.pdf",
 par(mar=c(6.1, 5.1, 5.1, 18.1),xpd=TRUE)
 for(i in 1:length(data)){
   if(i==1){
-    plot(data[[i]]$V1,data[[i]]$V3, type="l", col=dark2[i], ylim=c(0,high_fr),xlim=c(55,500), ylab="Fraction",xlab="Insert size [bp]",lwd=1.5)
+    plot(data[[i]]$V1,data[[i]]$V3, type="l", col=dark2[i], ylim=c(0,high_fr),xlim=c(55,500), ylab="Fraction",xlab="Insert size [bp]",lwd=2)
   }
   else{
-    lines(data[[i]]$V1,data[[i]]$V3, type="l", col=dark2[i], lwd=1.5)
+    lines(data[[i]]$V1,data[[i]]$V3, type="l", col=dark2[i], lwd=2)
   }
 }
 par(mar=c(6.1, 5.1, 5.1, 18.1),xpd=FALSE)
 abline(v=c(140,200), col="black", lty=2)
 par(mar=c(6.1, 5.1, 5.1, 18.1),xpd=TRUE)
-legend(550,1.1*high_fr,legend=names, col=dark2[1:length(data)],lty = 1, cex = 1, bty="n", lwd = 1.5)
+legend(550,1.1*high_fr,legend=names, col=dark2[1:length(data)],lty = 1, cex = 1, bty="n", lwd=2)
 dev.off()

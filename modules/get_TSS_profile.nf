@@ -1,4 +1,5 @@
 process TSS_profile_mono{
+  label 'mid'
 
   input:
   file(bw)
@@ -13,7 +14,7 @@ process TSS_profile_mono{
    -R $params.TSS \
    --referencePoint TSS \
    -o "computeMatrix2plot_mono.txt.gz" \
-   -b 1500 -a 1500 --smartLabels -p 10
+   -b 1500 -a 1500 --smartLabels -p $task.cpus
 
 
   """
@@ -33,13 +34,11 @@ process TSS_profile_plot_mono{
   plotProfile -m $computeMatrix2plot_mono \
        -out 'DefaultHeatmap_mono.png' \
        --outFileNameData 'values_Profile_mono.txt'
-
-
   """
 }
 
 process TSS_profile_sub{
-
+  label 'mid'
 
   input:
   file(bw)
@@ -54,14 +53,13 @@ process TSS_profile_sub{
    -R $params.TSS \
    --referencePoint TSS \
    -o "computeMatrix2plot_sub.txt.gz" \
-   -b 1500 -a 1500 --smartLabels -p 10
+   -b 1500 -a 1500 --smartLabels -p $task.cpus
 
 
   """
 }
 
 process TSS_profile_plot_sub{
-
 
   input:
   file(computeMatrix2plot_sub)
@@ -72,7 +70,8 @@ process TSS_profile_plot_sub{
   script:
   """
   plotProfile -m $computeMatrix2plot_sub \
-       -out 'DefaultHeatmap_sub.png' 
+       -out 'DefaultHeatmap_sub.png' \
+       --outFileNameData 'values_Profile_sub.txt'
 
   """
 }
