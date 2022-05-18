@@ -9,6 +9,7 @@ process qualimap {
 
   output:
   file "${sampleID}"
+  tuple val(sampleID), file("${sampleID}/*.txt")
 
   script:
   """

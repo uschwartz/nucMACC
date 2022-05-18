@@ -6,7 +6,7 @@ process sieve_mono{
   tuple val(sampleID), val(bam)
 
   output:
-  file "*_mono_FiltLog.txt"
+  tuple val(sampleID), file("*_mono_FiltLog.txt")
   tuple val(sampleID), file("*_mono.bam")
 
   script:
@@ -30,7 +30,7 @@ process sieve_sub{
   tuple val(sampleID), val(bam)
 
   output:
-  file "*_sub_FiltLog.txt"
+  tuple val(sampleID), file("*_sub_FiltLog.txt")
   tuple val(sampleID), file("*_sub.bam")
 
   script:
