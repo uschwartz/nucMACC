@@ -19,13 +19,13 @@ process statistics_plot{
   publishDir "${params.outDir}/QC/FragmentStatistics", mode: 'copy'
 
   input:
-  
+  file(statistics_read)
 
   output:
   file("*.pdf")
 
   script:
   """
-  Plot-comparison.R
+  Plot_comparison.R
   """
 }
