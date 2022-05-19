@@ -90,7 +90,7 @@ include{qualimap} from './modules/qualimap'
 //InsertSize_Histogram
 include{InsertSize_Histogram} from './modules/InsertSize_Histogram'
 //FragmentStatistics
-include{statistics_read} from './modules/fragment_statistics'
+include{statistics_read; statistics_plot} from './modules/fragment_statistics'
 // filtering sizes using alignmentSieve
 include{sieve_mono; sieve_sub} from './modules/alignmentsieve'
 // prepare for DANPOS
@@ -133,7 +133,7 @@ workflow{
 
   //FragmentStatistics
   statistics_read(sieve_mono.out[0].join(sieve_sub.out[0]).join(fastqc.out[2]).join(alignment.out[2]).join(qualimap.out[1]))
-
+  statistics_plot(statistics_read.out[0].collect())
   //TSS_Profile_mono
   if(params.TSS){
   TSS_profile_mono(danpos_mono.out[0].collect())
