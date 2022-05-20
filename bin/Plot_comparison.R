@@ -8,8 +8,9 @@ txt_output <- list.files(path = ".", pattern = "fragment_statistic.txt", full.na
 
 # Generate a matrix that contains all the information to be plotted. 
 # Here the absolute counts are needed to calculate the steps lost in each step of the pipeline.
-lost_matrix <- matrix(data = NA, nrow = 6, ncol = 2)
+lost_matrix <- matrix(data = NA, nrow = 6, ncol = length(txt_output))
 names <- c()
+txt_summary <- matrix(data = NA, nrow = length(txt_output), ncol = 5)
 for (i in 1:length(txt_output)){
   df <- read.table(txt_output[i], header = TRUE, sep = " ")
   lost_matrix[1, i] <- df[1,1]
@@ -20,8 +21,12 @@ for (i in 1:length(txt_output)){
   lost_matrix[6, i] <- df[1, 5]
   rownames(lost_matrix) <- c("Sequenced", "Not aligned", "Quality-filtered", "Size- and Blacklist-filtered", colnames(df[, 4:5]))
   names[i] <- rownames(df)
+  colnames(txt_summary) <- colnames(df)
+  txt_summary[i, ] <- unlist(df)
 }
 colnames(lost_matrix) <- names
+rownames(txt_summary) <- names
+
 destination <- c()
 out <- c()
 for (i in 1:ncol(lost_matrix)){
@@ -45,10 +50,11 @@ g <- ggplot(plot_frame, aes(x = Sample, y = Counts/10**6, fill = Type)) +
       scale_fill_manual(values=c("gray71", "gray60", "gray40", "coral", "coral3")) + 
       scale_y_continuous(breaks = seq(0, max(lost_matrix)/10**6, by = 50)) +
       xlab("") +
-      ylab("read fragments per million") +
+      ylab("fragments per million") +
       labs(fill = "") +
       theme_classic() +
       theme(axis.text.x = element_text(angle = 45, hjust = 1), axis.title.y = element_text(color = "grey30", size = 10))
-pdf("read_statistic.pdf", width = ncol(lost_matrix) + 2, height = 4)
+pdf("fragment_statistic.pdf", width = ncol(lost_matrix) + 2, height = 4)
 print(g)
 dev.off()
+write.table(x = txt_summary, file = "Summary_fragment_statistic.txt", append = FALSE, sep = " ", dec = ".", row.names = TRUE, col.names = TRUE)
