@@ -1,12 +1,13 @@
 process statistics_read{
   container 'uschwartz/r_nucmacc:v3'
-  publishDir "${params.outDir}/QC/FragmentStatistics", mode: 'copy'
+  publishDir "${params.outDir}/QC/FragmentStatistics/${sampleID}", mode: 'copy'
 
   input:
   tuple val(sampleID), file(sieve_mono), file(sieve_sub), file(fastqc), file(alignment), file(qualimap)
 
   output:
   file("*.txt")
+  file("*.pdf")
 
   script:
   """
@@ -22,6 +23,7 @@ process statistics_plot{
   file(statistics_read)
 
   output:
+  file("*.txt")
   file("*.pdf")
 
   script:
