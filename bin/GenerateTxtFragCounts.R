@@ -73,6 +73,17 @@ read_filtered_alignments <- function(f_align_files, read_frame){
     return(return_frame)
 }
 
+
+plot_frag_abs <- function(read_frame){
+  plot_name <- paste(row.names(read_frame), c("fragments.pdf"), sep = "_")
+  color = "coral3"
+  pdf(plot_name)
+    barplot(as.matrix(read_frame/10**6), beside = FALSE, sub = paste("Sample:", row.names(read_frame), sep = " "), 
+            col = color, border = NA, ylab = "Number of fragments per million", col.axis = "grey30", col.lab = "grey30",
+            col.sub = "grey30", las = 1, space = 0.15, ylim = c(0, signif(max(read_frame/10**6), digits = -1)))
+  dev.off()
+}
+
 ### Output Generation ###
 
 files <- read_files()
@@ -80,6 +91,9 @@ reads <- read_fastqc(files[1])
 reads <- read_alignedqc(files[2], reads)
 reads <- read_qualimap(files[3], reads)
 reads <- read_filtered_alignments(files[4:5], reads)
+plot_frag_abs(reads)
+
 txt_name <- rownames(reads)
-txt <- write.table(x = reads, file = paste(txt_name, c("fragment_statistic.txt"), sep = "_") , append = FALSE, sep = " ", dec = ".", row.names = TRUE, col.names = TRUE)
+txt <- write.table(x = reads, file = paste(txt_name, c("fragment_statistic.txt"), sep = "_") , append = FALSE, quote = FALSE, sep = " ", dec = ".", row.names = TRUE, col.names = TRUE)
+
     
