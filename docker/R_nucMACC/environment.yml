@@ -9,6 +9,9 @@ dependencies:
  - conda-forge::r-base=4.1.1
  - conda-forge::r-lsd=4.1_0
  - conda-forge::r-rcolorbrewer=1.1_2
+ - conda-forge::r-stringr=1.4.0
+ - conda-forge::r-ggplot2=3.3.6
+
 
  ## bioconda packages
  - bioconda::bioconductor-edger=3.36.0
