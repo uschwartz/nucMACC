@@ -9,6 +9,7 @@ process alignment{
   output:
   file "*_alignment_stats.txt"
   tuple val(sampleID), file("*_aligned.bam")
+  tuple val(sampleID), file("*_alignment_stats.txt")
 
   script:
   """

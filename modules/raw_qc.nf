@@ -8,6 +8,7 @@ process fastqc{
   output:
   file "*_fastqc.zip"
   file "*_fastqc.html"
+  tuple val(sampleID), file("*_fastqc.zip")
 
   script:
   """
