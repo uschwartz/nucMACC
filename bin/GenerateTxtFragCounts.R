@@ -4,7 +4,7 @@
 library(stringr)
 
 #### Function definition ####
-######## DATA LOADING ###########
+######## DATA LOADING ######
 read_files <- function(){
     fastqc_file <- list.files(path = ".", pattern = "_fastqc.zip", all.files = TRUE, full.names = TRUE, recursive = TRUE)
     alignment_file <- list.files(path = ".", pattern = "_alignment_stats.txt", all.files = TRUE, full.names = TRUE)
@@ -33,7 +33,6 @@ read_fastqc <- function(fastqc_file){
     fast <- unzip(fastqc_file, files = fast_name)
     df <- read.table(fast[1], header = FALSE, nrows = 7, fill = TRUE)
     fastqc_vec <- strtoi(df[5,3])
-    # row_name <- stringr::str_remove(tail(unlist(stringr::str_split(c(fastqc_file), pattern = "/")), 1), pattern = "_fastqc.zip")
     fastqc_matrix <- matrix(fastqc_vec, dimnames = list("", "Sequenced"))
     return(fastqc_matrix)
 }
@@ -61,7 +60,6 @@ read_qualimap<- function(qualimap_file, read_frame){
     return(return_frame)
 }
 
-
 read_filtered_alignments <- function(f_align_files, read_frame){
     remaining_reads <- matrix(data = NA, nrow = 1, ncol = length(f_align_files), dimnames = list(" ", c("SubNuc", "MonoNuc")))
     for (j in 1:length(f_align_files)){
@@ -73,19 +71,18 @@ read_filtered_alignments <- function(f_align_files, read_frame){
     return(return_frame)
 }
 
-
 plot_frag_abs <- function(read_frame){
+  read_frame <- read_frame[, c(1:3, 5, 4)]
   plot_name <- paste(row.names(read_frame), c("fragments.pdf"), sep = "_")
-  color = "coral3"
+  color <- "coral3"
   pdf(plot_name)
-    barplot(as.matrix(read_frame/10**6), beside = FALSE, sub = paste("Sample:", row.names(read_frame), sep = " "), 
+    barplot(as.matrix(read_frame/10**6), beside = FALSE, names.arg = colnames(read_frame), sub = paste("Sample:", row.names(read_frame), sep = " "), 
             col = color, border = NA, ylab = "Number of fragments per million", col.axis = "grey30", col.lab = "grey30",
-            col.sub = "grey30", las = 1, space = 0.15, ylim = c(0, signif(max(read_frame/10**6), digits = -1)))
+            col.sub = "grey30", las = 1, ylim = c(0, signif(max(read_frame/10**6), digits = -1)))
   dev.off()
 }
 
 ### Output Generation ###
-
 files <- read_files()
 reads <- read_fastqc(files[1])
 reads <- read_alignedqc(files[2], reads)
@@ -94,6 +91,4 @@ reads <- read_filtered_alignments(files[4:5], reads)
 plot_frag_abs(reads)
 
 txt_name <- rownames(reads)
-txt <- write.table(x = reads, file = paste(txt_name, c("fragment_statistic.txt"), sep = "_") , append = FALSE, quote = FALSE, sep = " ", dec = ".", row.names = TRUE, col.names = TRUE)
-
-    
+txt <- write.table(x = reads, file = paste(txt_name, c("fragment_statistic.txt"), sep = "_") , append = FALSE, quote = FALSE, sep = "\t", dec = ".", row.names = TRUE, col.names = TRUE)

@@ -1,5 +1,5 @@
 process statistics_read{
-  container 'uschwartz/r_nucmacc:v3'
+  container 'uschwartz/r_nucmacc:v3.1'
   publishDir "${params.outDir}/QC/FragmentStatistics/${sampleID}", mode: 'copy'
 
   input:
@@ -16,7 +16,7 @@ process statistics_read{
 }
 
 process statistics_plot{
-  container 'uschwartz/r_nucmacc:v3'
+  container 'uschwartz/r_nucmacc:v3.1'
   publishDir "${params.outDir}/QC/FragmentStatistics", mode: 'copy'
 
   input:
