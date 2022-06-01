@@ -1,7 +1,7 @@
 process nucMACC_scores{
-  container 'uschwartz/r_nucmacc'
+  container 'uschwartz/r_nucmacc:v3.1'
 
-  publishDir "${params.outDir}/RUN/09_nucMACC", mode: 'copy'
+  publishDir "${params.outDir}/RUN/05_nucMACC", mode: 'copy'
 
   input:
   file(readCounts)
@@ -23,9 +23,9 @@ process nucMACC_scores{
 }
 
 process sub_nucMACC_scores{
-  container 'uschwartz/r_nucmacc'
+  container 'uschwartz/r_nucmacc:v3.1'
 
-  publishDir "${params.outDir}/RUN/10_sub-nucMACC", mode: 'copy'
+  publishDir "${params.outDir}/RUN/06_sub-nucMACC", mode: 'copy'
 
   input:
   file(readCounts)

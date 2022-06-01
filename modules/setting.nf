@@ -18,6 +18,7 @@ def settings() {
                   blacklist:    ${params.blacklist}
                   genomeSize:   ${params.genomeSize}
                   TSS:          ${params.TSS}
+                  publishBam:   ${params.publishBam}
 
                   """.stripIndent()
 

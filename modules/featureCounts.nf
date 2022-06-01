@@ -1,7 +1,7 @@
 process featureCounts_mono{
         label 'big'
 
-        publishDir "${params.outDir}/RUN/08_NUCS_READ_COUNTS", mode: 'copy'
+        publishDir "${params.outDir}/RUN/04_NUCS_READ_COUNTS", mode: 'copy'
 
 
         input:

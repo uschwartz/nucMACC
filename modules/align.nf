@@ -1,6 +1,7 @@
 process alignment{
   label 'big'
-  publishDir "${params.outDir}/RUN/02_ALIGNMENT", mode: 'copy', pattern: "*_alignment_stats.txt"
+  publishDir "${params.outDir}/QC/02_ALIGNMENT", mode: 'copy', pattern: "*_alignment_stats.txt"
+  publishDir "${params.outDir}/RUN/00_ALIGNMENT", mode: 'copy', pattern: "*_aligned.bam", enabled:params.publishBam
 
 
   input:

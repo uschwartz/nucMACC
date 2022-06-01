@@ -2,7 +2,7 @@ process qualimap {
 
   container 'uschwartz/qualimap'
   label 'mid'
-  publishDir "${params.outDir}/RUN/03_QUALIMAP", mode: 'copy'
+  publishDir "${params.outDir}/QC/03_QUALIMAP", mode: 'copy'
 
   input:
   tuple val(sampleID), file(bam)

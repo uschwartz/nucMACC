@@ -1,7 +1,7 @@
 process danpos_mono{
   container 'uschwartz/danpos'
-
-  publishDir "${params.outDir}/RUN/05_MONO-NUCS_PROFILE", mode: 'copy', pattern: "*_monoNucs_profile.bw"
+  memory { params.genomeSize > 200000000 ? 50.GB : 16.GB }
+  publishDir "${params.outDir}/RUN/01_MONO-NUCS_PROFILE", mode: 'copy', pattern: "*_monoNucs_profile.bw"
 
   input:
   tuple val(sampleID), file(bam)
@@ -13,17 +13,18 @@ process danpos_mono{
 
 
   script:
+  resolution = ( params.genomeSize > 200000000 ? '10':'1')
   """
   danpos.py dpos $bam -m 1 --extend 70 -c $params.genomeSize \
-  -u 0 -z 1 -a 1 -e 1  > $sampleID"_DANPOS_stats.txt"
+  -u 0 -z 20 -a $resolution -e 1  > $sampleID"_DANPOS_stats.txt"
   wigToBigWig result/pooled/*.wig -clip $chrSizes $sampleID"_monoNucs_profile.bw"
   """
 }
 
 process danpos_sub{
   container 'uschwartz/danpos'
-
-  publishDir "${params.outDir}/RUN/06_SUB-NUCS_PROFILE", mode: 'copy', pattern: "*_subNucs_profile.bw"
+  memory { params.genomeSize > 200000000 ? 50.GB : 16.GB }
+  publishDir "${params.outDir}/RUN/02_SUB-NUCS_PROFILE", mode: 'copy', pattern: "*_subNucs_profile.bw"
 
   input:
   tuple val(sampleID), file(bam)

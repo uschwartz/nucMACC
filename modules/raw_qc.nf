@@ -1,6 +1,6 @@
 process fastqc{
 
-  publishDir "${params.outDir}/RUN/01_FASTQC/${sampleID}", mode: 'copy', pattern: "*.html"
+  publishDir "${params.outDir}/QC/01_FASTQC/${sampleID}", mode: 'copy', pattern: "*.html"
 
   input:
   tuple val(sampleID), file(read)

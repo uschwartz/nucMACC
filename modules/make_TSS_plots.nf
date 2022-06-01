@@ -1,7 +1,7 @@
 process make_TSS_plots_monoNucs{
-  container 'uschwartz/r_nucmacc:v2'
+  container 'uschwartz/r_nucmacc:v3.1'
 
-  publishDir "${params.outDir}/RUN/11_TSS_profile/monoNucs", mode: 'copy'
+  publishDir "${params.outDir}/RUN/07_TSS_profile/monoNucs", mode: 'copy'
 
   input:
   file(input)
@@ -16,9 +16,9 @@ process make_TSS_plots_monoNucs{
 }
 
 process make_TSS_plots_subNucs{
-  container 'uschwartz/r_nucmacc:v2'
+  container 'uschwartz/r_nucmacc:v3.1'
 
-  publishDir "${params.outDir}/RUN/11_TSS_profile/subNucs", mode: 'copy'
+  publishDir "${params.outDir}/RUN/07_TSS_profile/subNucs", mode: 'copy'
 
   input:
   file(input)
