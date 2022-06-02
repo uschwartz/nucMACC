@@ -17,7 +17,7 @@ process statistics_read{
 
 process statistics_plot{
   container 'uschwartz/r_nucmacc:v3.1'
-  publishDir "${params.outDir}/QC/FragmentStatistics", mode: 'copy'
+  publishDir "${params.outDir}/QC/06_FragmentStatistics", mode: 'copy'
 
   input:
   file(statistics_read)

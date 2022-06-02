@@ -19,7 +19,7 @@ process convert2saf_mono{
 }
 
 process convert2saf_sub{
-  publishDir "${params.outDir}/RUN/07_NUCS_POSITIONS", mode: 'copy', pattern: "*_sub-nucPositions.bed"
+  publishDir "${params.outDir}/RUN/03_NUCS_POSITIONS", mode: 'copy', pattern: "*_sub-nucPositions.bed"
 
   input:
   tuple val(sampleID), file(xls), file(bam)
