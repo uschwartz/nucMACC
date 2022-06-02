@@ -19,6 +19,7 @@ def settings() {
                   genomeSize:   ${params.genomeSize}
                   TSS:          ${params.TSS}
                   publishBam:   ${params.publishBam}
+                  publishBamFlt:${params.publishBamFlt}
 
                   """.stripIndent()
 

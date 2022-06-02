@@ -21,7 +21,8 @@ def helpMessage() {
       --outDir          [string] Name of output directory, which will be created (default: ~/nucMACC_test/)
       --blacklist       [string] A BED file containing regions that should be excluded from all nucleosome analysis (default: false)
       --TSS             [string] A Transcript annotation file in GTF format to obtain TSS profiles (default: false)
-      --publishBam      [boolean]if this option is set, aligned bam files will be written to outDir (default: false)
+      --publishBam      [boolean]if set, aligned bam files will be written to outDir (default: false)
+      --publishBamFlt   [boolean]if set, size selected bam files will be written to outDir (default: false)
 
      """.stripIndent()
      println ''
