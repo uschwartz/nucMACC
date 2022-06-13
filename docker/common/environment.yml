@@ -13,3 +13,4 @@ dependencies:
   - bioconda::ucsc-wigtobigwig=377
   - bioconda::subread=2.0.1
   - bioconda::bedtools=2.29.2
+  - bioconda::rename=1.601

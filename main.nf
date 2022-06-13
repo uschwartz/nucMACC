@@ -103,9 +103,9 @@ include{convert2saf_mono; convert2saf_sub} from './modules/convert2saf'
 include{featureCounts_mono; featureCounts_sub} from './modules/featureCounts'
 // get nucMACC_scores
 include{nucMACC_scores;sub_nucMACC_scores} from './modules/nucMACC_scores'
-//deeptools TTS
+//deeptools TSS
 include{TSS_profile_mono;TSS_profile_plot_mono;TSS_profile_sub;TSS_profile_plot_sub} from './modules/get_TSS_profile'
-//TTS Profile monoNucs
+//TSS Profile monoNucs
 include{make_TSS_plots_monoNucs;make_TSS_plots_subNucs } from './modules/make_TSS_plots'
 
 
