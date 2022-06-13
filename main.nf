@@ -27,38 +27,19 @@ nextflow.enable.dsl = 2
 
  //                      workflow
 // read csv file
-if(params.test){
-        // forward reads
-        Channel
-            .fromPath(params.csvInput)
-            .splitCsv(header:true)
-            .map{ row -> tuple(row.Sample_Name,
-              file(params.project.concat(row.path_fwdReads)))}
-            .set{samples_fwd_ch}
-
-        // reverse reads
-        Channel
-              .fromPath(params.csvInput)
-              .splitCsv(header:true)
-              .map{ row -> tuple(row.Sample_Name,
-                 file(params.project.concat(row.path_revReads)))}
-              .set{samples_rev_ch}
-} else {
+if(params.analysis=='nucMACC'){
         // forward reads
         Channel
             .fromPath(params.csvInput)
             .splitCsv(header:true)
             .map{ row -> tuple(row.Sample_Name,file(row.path_fwdReads))}
             .set{samples_fwd_ch}
-
         // reverse reads
         Channel
               .fromPath(params.csvInput)
               .splitCsv(header:true)
               .map{ row -> tuple(row.Sample_Name,file(row.path_revReads))}
               .set{samples_rev_ch}
-}
-
 //Channel for fastqc
 samples_fwd_ch.mix(samples_rev_ch).set{sampleSingle_ch}
 //Channel for alignment
@@ -70,86 +51,16 @@ Channel
       .splitCsv(header:true)
       .map{ row -> tuple(row.MNase_U.toDouble(),row.Sample_Name)}
       .set{samples_conc}
+}
 
-//get lowest MNase digest
-samples_conc.map{conc,sample -> conc}.min().set{min_conc}
-
-// get sample with lowest MNase digest
-min_conc.join(samples_conc)
-.map{conc,sample -> sample}
-.set{min_conc_sample}
-
-
-// load modules
-//fastqc
-include{fastqc; multiqc} from './modules/raw_qc'
-//alignment to ref genome
-include{alignment} from './modules/align'
-//qualimap after alignment
-include{qualimap} from './modules/qualimap'
-//InsertSize_Histogram
-include{InsertSize_Histogram} from './modules/InsertSize_Histogram'
-//FragmentStatistics
-include{statistics_read; statistics_plot} from './modules/fragment_statistics'
-// filtering sizes using alignmentSieve
-include{sieve_mono; sieve_sub} from './modules/alignmentsieve'
-// prepare for DANPOS
-include{pool} from './modules/prepareDANPOS'
-// DANPOS run
-include{danpos_mono; danpos_sub} from './modules/DANPOS'
-// convert DANPOS output
-include{convert2saf_mono; convert2saf_sub} from './modules/convert2saf'
-// get read count per nucleosome
-include{featureCounts_mono; featureCounts_sub} from './modules/featureCounts'
-// get nucMACC_scores
-include{nucMACC_scores;sub_nucMACC_scores} from './modules/nucMACC_scores'
-//deeptools TSS
-include{TSS_profile_mono;TSS_profile_plot_mono;TSS_profile_sub;TSS_profile_plot_sub} from './modules/get_TSS_profile'
-//TSS Profile monoNucs
-include{make_TSS_plots_monoNucs;make_TSS_plots_subNucs } from './modules/make_TSS_plots'
+// load workflows
+// generate profiles
+include{nucMACC} from './workflows/nucMACC'
 
 
 workflow{
-  fastqc(sampleSingle_ch)
-  alignment(samplePair_ch)
-  qualimap(alignment.out[1])
-
-  // monoNucs
-  sieve_mono(alignment.out[1])
-  pool(sieve_mono.out[1].map{name,bam -> file(bam)}.collect())
-  danpos_mono(sieve_mono.out[1].mix(pool.out[0]), pool.out[1])
-  convert2saf_mono(danpos_mono.out[1].join(pool.out[0]))
-  featureCounts_mono(convert2saf_mono.out[1], sieve_mono.out[1].map{name,bam -> file(bam)}.collect())
-
-  //subNucs
-  sieve_sub(alignment.out[1])
-  danpos_sub(sieve_sub.out[1], pool.out[1])
-  convert2saf_sub(danpos_sub.out[1].join(min_conc_sample).join(sieve_sub.out[1]))
-  featureCounts_sub(convert2saf_sub.out[1], sieve_sub.out[1].map{name,bam -> file(bam)}.collect())
-
-  //QualityCheck
-  multiqc(fastqc.out[0].mix(alignment.out[0]).mix(qualimap.out[0]).collect())
-  InsertSize_Histogram(qualimap.out[0].collect())
-
-  //FragmentStatistics
-  statistics_read(sieve_mono.out[0].join(sieve_sub.out[0]).join(fastqc.out[2]).join(alignment.out[2]).join(qualimap.out[1]))
-  statistics_plot(statistics_read.out[0].collect())
-  //TSS_Profile_mono
-  if(params.TSS){
-  TSS_profile_mono(danpos_mono.out[0].collect())
-  TSS_profile_plot_mono(TSS_profile_mono.out)
-  make_TSS_plots_monoNucs(TSS_profile_plot_mono.out)
-  //TSS_Profile_sub
-  TSS_profile_sub(danpos_sub.out[0].collect())
-  TSS_profile_plot_sub(TSS_profile_sub.out)
-  make_TSS_plots_subNucs(TSS_profile_plot_sub.out)
-  }
-
-
-  //nucMACC scores
-  nucMACC_scores(featureCounts_mono.out[0], Channel.fromPath(params.csvInput),featureCounts_mono.out[1])
-
-  //subMACC scores
-  sub_nucMACC_scores(featureCounts_sub.out[0], Channel.fromPath(params.csvInput),min_conc_sample, nucMACC_scores.out[2],featureCounts_mono.out, featureCounts_sub.out[1])
-  //min_conc_sample.view()
+        if(params.analysis=='nucMACC'){
+                profiler(sampleSingle_ch,samplePair_ch,samples_conc)
+        }
+        
 }
