@@ -28,6 +28,7 @@ include{make_TSS_plots_monoNucs;make_TSS_plots_subNucs } from '../modules/make_T
 
 
 workflow nucMACC{
+
   take:
   sampleSingle_ch
   samplePair_ch
@@ -67,6 +68,7 @@ workflow nucMACC{
   //FragmentStatistics
   statistics_read(sieve_mono.out[0].join(sieve_sub.out[0]).join(fastqc.out[2]).join(alignment.out[2]).join(qualimap.out[1]))
   statistics_plot(statistics_read.out[0].collect())
+
   //TSS_Profile_mono
   if(params.TSS){
   TSS_profile_mono(danpos_mono.out[0].collect())
@@ -78,11 +80,11 @@ workflow nucMACC{
   make_TSS_plots_subNucs(TSS_profile_plot_sub.out)
   }
 
-
   //nucMACC scores
   nucMACC_scores(featureCounts_mono.out[0], Channel.fromPath(params.csvInput),featureCounts_mono.out[1])
 
   //subMACC scores
   sub_nucMACC_scores(featureCounts_sub.out[0], Channel.fromPath(params.csvInput),min_conc_sample, nucMACC_scores.out[2],featureCounts_mono.out, featureCounts_sub.out[1])
   //min_conc_sample.view()
+
 }

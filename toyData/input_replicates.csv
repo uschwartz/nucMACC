@@ -1,0 +1,5 @@
+Sample_Name,path_fwdReads,path_revReads,MNase_U
+H4_rep1_6.25U_cut,/toyData/H4_rep1_6.25U/H4_rep1_6.25U_cut_1.fastq.gz,/toyData/H4_rep1_6.25U/H4_rep1_6.25U_cut_2.fastq.gz,6.25
+H4_rep2_6.25U_cut,/toyData/H4_rep2_6.25U/H4_rep2_6.25U_cut_1.fastq.gz,/toyData/H4_rep2_6.25U/H4_rep2_6.25U_cut_2.fastq.gz,6.25
+H4_rep1_100U_cut,/toyData/H4_rep1_100U/H4_rep1_100U_cut_1.fastq.gz,/toyData/H4_rep1_100U/H4_rep1_100U_cut_2.fastq.gz,100
+H4_rep2_100U_cut,/toyData/H4_rep2_100U/H4_rep2_100U_cut_1.fastq.gz,/toyData/H4_rep2_100U/H4_rep2_100U_cut_2.fastq.gz,100
