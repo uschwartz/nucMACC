@@ -1,6 +1,6 @@
 process danpos_mono{
   container 'uschwartz/danpos'
-  memory { params.genomeSize > 200000000 ? 50.GB : 16.GB }
+  memory { params.genomeSize > 200000000 ? 45.GB : 14.GB }
   publishDir "${params.outDir}/RUN/01_MONO-NUCS_PROFILE", mode: 'copy', pattern: "*_monoNucs_profile.bw"
 
   input:
@@ -23,7 +23,7 @@ process danpos_mono{
 
 process danpos_sub{
   container 'uschwartz/danpos'
-  memory { params.genomeSize > 200000000 ? 50.GB : 16.GB }
+  memory { params.genomeSize > 200000000 ? 45.GB : 14.GB }
   publishDir "${params.outDir}/RUN/02_SUB-NUCS_PROFILE", mode: 'copy', pattern: "*_subNucs_profile.bw"
 
   input:
