@@ -15,7 +15,7 @@ read_files <- function(){
       if (stringr::str_detect(filtered_align[i], "sub") == TRUE){
         correctly_ordered[1] <- filtered_align[i]
       } else {
-       correctly_ordered[2] <- filtered_align[i] 
+       correctly_ordered[2] <- filtered_align[i]
       }
     }
     files <- c(fastqc_file[1], alignment_file, qualimap_file, correctly_ordered)
@@ -27,7 +27,7 @@ read_fastqc <- function(fastqc_file){
     fast_list <- unzip(fastqc_file, list = TRUE)
     for (i in 1:length(stringr::str_detect(fast_list$Name, "/fastqc_data.txt"))){
       if (stringr::str_detect(fast_list$Name, "/fastqc_data.txt")[i] == TRUE) {
-        fast_name <- c(fast_list[i,1]) 
+        fast_name <- c(fast_list[i,1])
       }
     }
     fast <- unzip(fastqc_file, files = fast_name)
@@ -76,7 +76,7 @@ plot_frag_abs <- function(read_frame){
   plot_name <- paste(row.names(read_frame), c("fragments.pdf"), sep = "_")
   color <- "coral3"
   pdf(plot_name)
-    barplot(as.matrix(read_frame/10**6), beside = FALSE, names.arg = colnames(read_frame), sub = paste("Sample:", row.names(read_frame), sep = " "), 
+    barplot(as.matrix(read_frame/10**6), beside = FALSE, names.arg = colnames(read_frame), sub = paste("Sample:", row.names(read_frame), sep = " "),
             col = color, border = NA, ylab = "Number of fragments per million", col.axis = "grey30", col.lab = "grey30",
             col.sub = "grey30", las = 1, ylim = c(0, signif(max(read_frame/10**6), digits = -1)))
   dev.off()

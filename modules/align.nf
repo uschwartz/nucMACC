@@ -1,5 +1,6 @@
 process alignment{
-  label 'big'
+  label 'bigCPU'
+  memory { params.genomeSize > 200000000 ? params.high_memory : params.low_memory}
   publishDir "${params.outDir}/QC/02_ALIGNMENT", mode: 'copy', pattern: "*_alignment_stats.txt"
   publishDir "${params.outDir}/RUN/00_ALIGNMENT", mode: 'copy', pattern: "*_aligned.bam", enabled:params.publishBam
 

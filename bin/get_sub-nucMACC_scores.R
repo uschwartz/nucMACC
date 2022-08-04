@@ -57,7 +57,7 @@ normFactor<-apply(featureCounts.sub[,c(-1)],2,sum)/1e6
 
 #Counts per million (normalization based on library size)
 normCounts<-t(t(real.subNucs)/normFactor[match(colnames(real.subNucs),
-                                               names(normFactor))]) 
+                                               names(normFactor))])
 
 ### REGRESSION
 
@@ -104,7 +104,7 @@ quant<-hist(gc, breaks=seq(0,1,by = 0.05) ,  plot = F)
 
 
 # at least 200 nucleosomes required per 5% step
-#thresholds
+# thresholds
 max.gc<-quant$breaks[max(which(quant$counts > 200)+1)]
 min.gc<-quant$breaks[min(which(quant$counts > 200))]
 
@@ -112,9 +112,12 @@ min.gc<-quant$breaks[min(which(quant$counts > 200))]
 gc.filt<-gc[which(gc > min.gc & gc < max.gc)]
 slope.filt<-slope[which(gc > min.gc & gc < max.gc)]
 
+#test if GC area is broad enough
+gc.area<-(max.gc-min.gc)
+spanSize<-ifelse(gc.area>0.11, 0.1, 0.3)
 
 #calculate loess fit
-loess.slope <- loess(y ~ x, span=0.1,
+loess.slope <- loess(y ~ x, span=spanSize,
                      data.frame(x=gc.filt, y=slope.filt),
                      control=loess.control(surface = "interpolate",
                                            statistics="none",cell=0.1))
@@ -270,7 +273,7 @@ dev.off()
 
 
 ### select the nucs with nucMACC scores deviating from the mean
-#scores need to be positive or negative 
+#scores need to be positive or negative
 cutoff.low<-min(c(sub_nucMACC_sort[cutOff1],0))
 cutoff.high<-max(c(sub_nucMACC_sort[cutOff2],0))
 
