@@ -11,8 +11,9 @@ process qualimap {
   file "${sampleID}"
   tuple val(sampleID), file("${sampleID}/*.txt")
 
+
   script:
   """
-  qualimap bamqc --java-mem-size=16G -bam $bam -c -outdir ${sampleID}
+  qualimap bamqc --java-mem-size=14G -bam $bam -c -outdir ${sampleID}
   """
 }

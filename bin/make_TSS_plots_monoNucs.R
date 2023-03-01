@@ -13,7 +13,11 @@ heat.val<-read.delim(file = args[1])
 dark2 <- c(RColorBrewer::brewer.pal(8, "Dark2"),RColorBrewer::brewer.pal(8, "Set1"),RColorBrewer::brewer.pal(8, "Set2"))
 
 names.pre <- gsub("_monoNucs_profile","",as.character(heat.val$bin.labels)[-1])
+
 row.names(heat.val)<-c("bin",names.pre)
+heat.val<-heat.val[order(row.names(heat.val)), ]
+
+
 
 TSS.pos<-which(colnames(heat.val)=="tick")
 
@@ -30,6 +34,8 @@ if(sum(names.pre %in% "pooled")>0){
 } else {
     names<-names.pre
 }
+
+names<-sort(names)
 
 #get min value in 
 for(i in names){

@@ -13,7 +13,10 @@ dark2 <- c(RColorBrewer::brewer.pal(8, "Dark2"),RColorBrewer::brewer.pal(8, "Set
 
 names <- gsub("_subNucs_profile","",as.character(heat.val$bin.labels)[-1])
 
+
 row.names(heat.val)<-c("bin",names)
+heat.val<-heat.val[order(row.names(heat.val)), ]
+names<-sort(names)
 
 TSS.pos<-which(colnames(heat.val)=="tick")
 
