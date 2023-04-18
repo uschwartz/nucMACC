@@ -10,18 +10,24 @@ nucMACC is an automated analysis pipeline for the analysis of nucleosome positio
 
 Given trimmed paired-end sequencing reads in fastq format, this pipeline will run:
 
-* `MNaseQC` and `nucMACC`
-  * QC using `FastQC` on fastq files
-  * Alignment using `Bowtie2` on fastq files
-  * QC using `Qualimap` on aligned fragments
-  * Fragment size distribution plot
-        * Group the fragments by size using 'deepTools alignmentSieve' and optionally filter blacklisted regions
-                * Mono-nucleosome (140 - 200 bp)
-                * Sub-nucleosome (< 140 bp)
+1. `MNaseQC` and `nucMACC`
+  1. QC using `FastQC` on fastq files
+  2. Alignment using `Bowtie2` on fastq files
+  3. QC using `Qualimap` on aligned fragments
+  4. Fragment size distribution plot
+        5. Group the fragments by size using 'deepTools alignmentSieve' and optionally filter blacklisted regions
+                1. Mono-nucleosome (140 - 200 bp)
+                2. Sub-nucleosome (< 140 bp)
         * Report fragment statistics of each processing step
         * Create nucleosome maps of Mono- and Sub-nucleosomes using `DANPOS`
         * Optionally create TSS profiles using `deepTools`
         * Summary reports using `MultiQC`
+
+        8. Choice of multiple alignment and quantification routes:
+           1. [`STAR`](https://github.com/alexdobin/STAR) -> [`Salmon`](https://combine-lab.github.io/salmon/)
+           2. [`STAR`](https://github.com/alexdobin/STAR) -> [`RSEM`](https://github.com/deweylab/RSEM)
+           3. [`HiSAT2`](https://ccb.jhu.edu/software/hisat2/index.shtml) -> **NO QUANTIFICATION**
+        9. So
 
 * `MNaseQC` specific
         * PCA of nucleosome maps using `deepTools`
