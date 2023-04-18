@@ -18,7 +18,7 @@ Given trimmed paired-end sequencing reads in fastq format, this pipeline will ru
         * Group the fragments by size using 'deepTools alignmentSieve' and optionally filter blacklisted regions
                 * Mono-nucleosome (140 - 200 bp)
                 * Sub-nucleosome (< 140 bp)
-        * Report fragment statistics of each processing step          
+        * Report fragment statistics of each processing step
         * Create nucleosome maps of Mono- and Sub-nucleosomes using `DANPOS`
         * Optionally create TSS profiles using `deepTools`
         * Summary reports using `MultiQC`
