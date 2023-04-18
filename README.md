@@ -11,10 +11,10 @@ nucMACC is an automated analysis pipeline for the analysis of nucleosome positio
 Given trimmed paired-end sequencing reads in fastq format, this pipeline will run:
 
 * `MNaseQC` and `nucMACC`
-        * QC using `FastQC` on fastq files
-        * Alignment using `Bowtie2` on fastq files
-        * QC using `Qualimap` on aligned fragments
-        * Fragment size distribution plot
+  * QC using `FastQC` on fastq files
+  * Alignment using `Bowtie2` on fastq files
+  * QC using `Qualimap` on aligned fragments
+  * Fragment size distribution plot
         * Group the fragments by size using 'deepTools alignmentSieve' and optionally filter blacklisted regions
                 * Mono-nucleosome (140 - 200 bp)
                 * Sub-nucleosome (< 140 bp)
