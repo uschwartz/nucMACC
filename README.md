@@ -11,30 +11,30 @@ nucMACC is an automated analysis pipeline for the analysis of nucleosome positio
 Given trimmed paired-end sequencing reads in fastq format, this pipeline will run:
 
 * `MNaseQC` and `nucMACC`
-        1. QC using `FastQC` on fastq files
-        2. Alignment using `Bowtie2` on fastq files
-        3. QC using `Qualimap` on aligned fragments
-        4. Fragment size distribution plot
-        5. Group the fragments by size using 'deepTools alignmentSieve' and optionally filter blacklisted regions
-                1. Mono-nucleosome (140 - 200 bp)
-                2. Sub-nucleosome (< 140 bp)
-        6. Report fragment statistics of each processing step          
-        7. Create nucleosome maps of Mono- and Sub-nucleosomes using `DANPOS`
-        8. Optionally create TSS profiles using `deepTools`
-        9. Summary reports using `MultiQC`
+        * QC using `FastQC` on fastq files
+        * Alignment using `Bowtie2` on fastq files
+        * QC using `Qualimap` on aligned fragments
+        * Fragment size distribution plot
+        * Group the fragments by size using 'deepTools alignmentSieve' and optionally filter blacklisted regions
+                * Mono-nucleosome (140 - 200 bp)
+                * Sub-nucleosome (< 140 bp)
+        * Report fragment statistics of each processing step          
+        * Create nucleosome maps of Mono- and Sub-nucleosomes using `DANPOS`
+        * Optionally create TSS profiles using `deepTools`
+        * Summary reports using `MultiQC`
 
 * `MNaseQC` specific
-        10. PCA of nucleosome maps using `deepTools`
-        11. Correlation analysis using `deepTools`
+        * PCA of nucleosome maps using `deepTools`
+        * Correlation analysis using `deepTools`
 
 * `nucMACC` specific
-        10. Pool all mono-nucleosome samples
-        11. Obtain mono-nucleosome positions from pooled samples and sub-nucleosome positions from lowest MNase concentration using `DANPOS`
-        12. Get GC content of nucleosome positions using `bedtools genomecov`
-        13. Remove nucleosome positions with low fragment count (mono-nucleosmes < 30 and sub-nucleosomes < 5)
-        14. Calculate (sub-)nucMACC score using linear regression Analysis
-        15. Correct for MNase GC-bias using LOWESS
-        16. Identify hyper-/hypo-accessible nucleosomes or unstable and non-canoncical nucleosomes.
+        * Pool all mono-nucleosome samples
+        * Obtain mono-nucleosome positions from pooled samples and sub-nucleosome positions from lowest MNase concentration using `DANPOS`
+        * Get GC content of nucleosome positions using `bedtools genomecov`
+        * Remove nucleosome positions with low fragment count (mono-nucleosmes < 30 and sub-nucleosomes < 5)
+        * Calculate (sub-)nucMACC score using linear regression Analysis
+        * Correct for MNase GC-bias using LOWESS
+        * Identify hyper-/hypo-accessible nucleosomes or unstable and non-canoncical nucleosomes.
 
 `nucMACC` is meant to run on pooled replicates in fastq format, whereas `MNaseQC` uses single replicates. As the `MNaseQC` and the `nucMACC` workflow have several steps in common it is recommended to run first `MNaseQC` and report the grouped bam files using `--publishBamFlt`. Then setting `--bamEntry` option, a shorter version of the `nucMACC` workflow can be run using the generated bam files as input. Here in an additional step at the beginning replicates are pooled.
 
