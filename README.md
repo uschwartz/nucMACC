@@ -47,7 +47,7 @@ Given trimmed paired-end sequencing reads in fastq format, this pipeline will ru
 * The pipeline is compatible with all computational infrastructures. Executing the pipeline on cloud or HPC systems may require to adapt the [`nextflow.config`](https://www.nextflow.io/docs/latest/basic.html).
 * For large reference genomes the pipeline requires at least 32 GB memory and default settings allocate 45 GB memory to demanding processes. Memory usage can be adjusted using the option `--high_memory` or directly in the [`nextflow.config`](https://www.nextflow.io/docs/latest/basic.html).
 * The pipeline requires paired-end sequencing data
-
+* Bowtie2 index of reference genome, reference genome in fasta format and the length of the mappable genome.
 
 ### Installation
 You can obtain the pipeline directly from GitHub:
