@@ -43,14 +43,102 @@ Given trimmed paired-end sequencing reads in fastq format, this pipeline will ru
 
 ### Requirements
 
-`Docker` and `nextflow` are required to run the nucMACC pipeline. Additional software used in the pipeline is packaged in Docker container and will be automatically downloaded during the first execution of the pipeline.
-The pipeline is compatible with all computational infrastructures. Executing the pipeline on cloud or HPC systems may require to adapt the [`nextflow.config`](https://www.nextflow.io/docs/latest/basic.html).
-For large reference genomes the pipeline requires at least 32 GB memory and default settings allocate 45 GB memory to demanding processes. Memory usage can be adjusted using the option `--high_memory` or directly in the [`nextflow.config`](https://www.nextflow.io/docs/latest/basic.html).
+* `Docker` and `nextflow` are required to run the nucMACC pipeline. Additional software used in the pipeline is packaged in Docker container and will be automatically downloaded during the first execution of the pipeline.
+* The pipeline is compatible with all computational infrastructures. Executing the pipeline on cloud or HPC systems may require to adapt the [`nextflow.config`](https://www.nextflow.io/docs/latest/basic.html).
+* For large reference genomes the pipeline requires at least 32 GB memory and default settings allocate 45 GB memory to demanding processes. Memory usage can be adjusted using the option `--high_memory` or directly in the [`nextflow.config`](https://www.nextflow.io/docs/latest/basic.html).
+* The pipeline requires paired-end sequencing data
+
 
 ### Installation
 You can obtain the pipeline directly from GitHub:
 ```bash
 git clone https://github.com/uschwartz/nucMACC.git
+```
+
+### Test pipeline
+The pipeline comes with a ready-to-use test data set.
+```bash
+nextflow run path2nucMACC/nucMACC --test
+```
+
+### Usage
+We recommend to use first the `MNaseQC` workflow and specifying `--publishBamFlt`. Then take the output and run `nucMACC` with `--bamEntry` option.  
+
+To execute the pipeline a samplesheet is required. The content depends on the workflow to execute. See examples in the `toyData` folder.
+
+Workflow:
+
+* `MNaseQC` (example `toyData/input_replicates.csv`)
+
+```csv
+Sample_Name,path_fwdReads,path_revReads,MNase_U
+H4_rep1_6.25U_cut,/toyData/H4_rep1_6.25U/H4_rep1_6.25U_cut_1.fastq.gz,/toyData/H4_rep1_6.25U/H4_rep1_6.25U_cut_2.fastq.gz,6.25
+H4_rep2_6.25U_cut,/toyData/H4_rep2_6.25U/H4_rep2_6.25U_cut_1.fastq.gz,/toyData/H4_rep2_6.25U/H4_rep2_6.25U_cut_2.fastq.gz,6.25
+H4_rep1_100U_cut,/toyData/H4_rep1_100U/H4_rep1_100U_cut_1.fastq.gz,/toyData/H4_rep1_100U/H4_rep1_100U_cut_2.fastq.gz,100
+H4_rep2_100U_cut,/toyData/H4_rep2_100U/H4_rep2_100U_cut_1.fastq.gz,/toyData/H4_rep2_100U/H4_rep2_100U_cut_2.fastq.gz,100
+```
+Each row represents a pair of fastq files. Here unique sample names are required.
+
+
+
+* `nucMACC --bamEntry` (example `toyData/sub_input.csv`)
+
+```csv
+Sample_Name,replicate,path_mono,path_sub,MNase_U
+H4_6.25U,rep1,/toyData/monoNuc/H4_rep1_6.25U_cut_mono.bam,/toyData/subNuc/H4_rep1_6.25U_cut_sub.bam,6.25
+H4_6.25U,rep2,/toyData/monoNuc/H4_rep2_6.25U_cut_mono.bam,/toyData/subNuc/H4_rep2_6.25U_cut_sub.bam,6.25
+H4_100U,rep1,/toyData/monoNuc/H4_rep1_100U_cut_mono.bam,/toyData/subNuc/H4_rep1_100U_cut_sub.bam,100
+H4_100U,rep2,/toyData/monoNuc/H4_rep2_100U_cut_mono.bam,/toyData/subNuc/H4_rep2_100U_cut_sub.bam,100
+```
+Each row represents a pair of fastq files. Rows with the same sample name are considered technical replicates and pooled automatically. Only numerical values are allowed in the last column `MNase_U`. Duration of MNase experiment could be used as well, if the MNase concentration was constant in the experiments, but the time of digestion differed. It is recommended to use the output of `MNaseQC` workflow, which can be obtained specifying `--publishBamFlt`. However, it is as well possible to enter the pipeline at this point with manually processed bam files.
+
+
+* nucMACC (example `toyData/input.csv`)
+
+```csv
+Sample_Name,path_fwdReads,path_revReads,MNase_U
+H4_rep1_6.25U_cut,/toyData/H4_rep1_6.25U/H4_rep1_6.25U_cut_1.fastq.gz,/toyData/H4_rep1_6.25U/H4_rep1_6.25U_cut_2.fastq.gz,6.25
+H4_rep1_100U_cut,/toyData/H4_rep1_100U/H4_rep1_100U_cut_1.fastq.gz,/toyData/H4_rep1_100U/H4_rep1_100U_cut_2.fastq.gz,100
+```
+Each row represents a pair of fastq files. In case of several replicates per MNase titration point, the fastq files need to be pooled before starting the pipeline. Only numerical values are allowed in the last column `MNase_U`. Duration of MNase experiment could be used as well, if the MNase concentration was constant in the experiments, but the time of digestion differed.  
+
+**Execute:**
+
+* `MNaseQC`
+```bash
+nextflow run path2nucMACC/nucMACC \
+        --analysis 'MNaseQC' \
+        --csvInput 'sample_sheet.csv' \
+        --outDir <OUTDIR> \
+        --genomeIdx 'Bowtie2Index/genome' \
+        --genomeSize 119481543 \
+        --genome 'genome.fa' \
+        --publishBamFlt \
+        --blacklist 'blacklisted_regions.bed'  \
+        --TSS 'genes.gtf'
+```
+All options, except `--publishBamFlt`,`--blacklist`, and `--TSS`, are required.   
+
+
+* `nucMACC` with `--bamEntry`
+```bash
+nextflow run path2nucMACC/nucMACC \
+        --analysis 'nucMACC' \
+        --csvInput 'sample_sheet.csv' \
+        --outDir <OUTDIR> \
+        --genomeIdx 'Bowtie2Index/genome' \
+        --genomeSize 119481543 \
+        --genome 'genome.fa' \
+        --bamEntry \
+        --TSS 'genes.gtf'
+```
+All options, except `--TSS`, are required.   
+
+
+## Get help
+
+```bash
+nextflow run path2nucMACC/nucMACC --help
 ```
 
 
