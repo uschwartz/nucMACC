@@ -8,6 +8,10 @@ nucMACC is an automated analysis pipeline for the analysis of nucleosome positio
 1. `MNaseQC` for QC and  exploratory analysis
 2. `nucMACC` for analysis of nucleosome positions, accessibility and stability
 
+<p align="center">
+	<img src="docs/img/workflow.png" width="650" height="450">
+</p>
+
 Given trimmed paired-end sequencing reads in fastq format, this pipeline will run:
 
 * `MNaseQC` and `nucMACC`
@@ -32,10 +36,11 @@ Given trimmed paired-end sequencing reads in fastq format, this pipeline will ru
     1. Pool all mono-nucleosome samples
     2. Obtain mono-nucleosome positions from pooled samples and sub-nucleosome positions from lowest MNase concentration using `DANPOS`
     3. Get GC content of nucleosome positions using `bedtools genomecov`
-    4. Remove nucleosome positions with low fragment count (mono-nucleosmes < 30 and sub-nucleosomes < 5)
-    5. Calculate (sub-)nucMACC score using linear regression Analysis
-    6. Correct for MNase GC-bias using LOWESS
-    7. Identify hyper-/hypo-accessible nucleosomes or unstable and non-canoncical nucleosomes.
+    4. Count number of fragments using `featureCounts`
+    5. Remove nucleosome positions with low fragment count (mono-nucleosmes < 30 and sub-nucleosomes < 5)
+    6. Calculate (sub-)nucMACC score using linear regression analysis
+    7. Correct for MNase GC-bias using LOWESS
+    8. Identify hyper-/hypo-accessible nucleosomes or unstable and non-canoncical nucleosomes.
 
 `nucMACC` is meant to run on pooled replicates in fastq format, whereas `MNaseQC` uses single replicates. As the `MNaseQC` and the `nucMACC` workflow have several steps in common, it is recommended to run first `MNaseQC` and report the fragment size selected bam files using `--publishBamFlt`. Then setting `--bamEntry` option, a shorter version of the `nucMACC` workflow can be run using the generated bam files as input. Here in an additional step at the beginning replicates are pooled.
 
