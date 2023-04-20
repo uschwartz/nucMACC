@@ -9,7 +9,7 @@ nucMACC is an automated analysis pipeline for the analysis of nucleosome positio
 2. `nucMACC` for analysis of nucleosome positions, accessibility and stability
 
 <p align="center">
-	<img src="docs/img/workflow.png" width="650" height="450">
+	<img src="docs/img/workflow.png" width="800" height="450">
 </p>
 
 Given trimmed paired-end sequencing reads in fastq format, this pipeline will run:
