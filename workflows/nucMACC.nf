@@ -102,7 +102,7 @@ workflow common_nucMACC{
   // subNucs
   danpos_sub(sieve_sub, pool.out[1])
   convert2saf_sub(danpos_sub.out[1].join(min_conc_sample).join(sieve_sub))
-  featureCounts_sub(convert2saf_sub.out[1], sieve_sub.map{name,bam -> file(bam)}.collect())
+  featureCounts_sub(convert2saf_sub.out[1], sieve_sub.map{name,bam -> file(bam)}.collect(),min_conc_sample)
 
   //TSS_Profile_mono
   if(params.TSS){

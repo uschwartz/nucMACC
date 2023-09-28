@@ -30,7 +30,8 @@ def settings() {
 
                   MNaseQC specific options:
                   correlationMethod:  ${params.correlationMethod}
-
+                  rawfilt_sub      :  ${params.rawfilt_sub}
+                  rawfilt_mono     :  ${params.rawfilt_mono}
 
 
                   """.stripIndent()

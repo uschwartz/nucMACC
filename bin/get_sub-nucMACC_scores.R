@@ -42,13 +42,7 @@ count.table<-readCounts[,c(6:(ncol(readCounts)-2))]
 rownames(count.table)<-readCounts$nucID
 colnames(count.table)<-gsub("_sub.bam", "", colnames(count.table))
 
-### READ filtering based on raw reads in lowest concentration
-#raw reads threshold
-raw.flt<-5
 
-#filter
-idx.raw<-count.table[,lowest.cond]>=raw.flt
-real.subNucs <- count.table[idx.raw,]
 
 ### READ COUNT NORMALIZATION
 
@@ -56,7 +50,7 @@ real.subNucs <- count.table[idx.raw,]
 normFactor<-apply(featureCounts.sub[,c(-1)],2,sum)/1e6
 
 #Counts per million (normalization based on library size)
-normCounts<-t(t(real.subNucs)/normFactor[match(colnames(real.subNucs),
+normCounts<-t(t(count.table)/normFactor[match(colnames(count.table),
                                                names(normFactor))])
 
 ### REGRESSION

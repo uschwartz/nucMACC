@@ -31,18 +31,15 @@ colnames(count.table)<-gsub("_mono.bam", "", colnames(count.table))
 
 ### READ filtering based on raw reads
 #raw reads threshold
-raw.flt<-30
 
-#filter
-idx.raw<-apply(count.table,1,sum)>raw.flt
-realNucs <- count.table[idx.raw,]
+
 
 ### READ COUNT NORMALIZATION
 #get normalization factors for CPMs
 normFactor<-apply(featureCounts.mono[,c(-1)],2,sum)/1e6
 
 #Counts per million (normalization based on library size)
-normCounts<-t(t(realNucs)/normFactor[match(colnames(realNucs),
+normCounts<-t(t(count.table)/normFactor[match(colnames(count.table),
                                                names(normFactor))]) 
 
 
