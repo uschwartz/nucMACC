@@ -25,6 +25,7 @@ nextflow.enable.dsl = 2
      exit 0
  }
 
+
  //                      workflow
 
 // read csv file
@@ -114,7 +115,7 @@ Channel
 // generate profiles
 include{MNaseQC} from './workflows/MNaseQC'
 include{sub_bamEntry; sub_FASTQ_entry; common_nucMACC} from './workflows/nucMACC'
-
+include{Diff_nucMACC} from './workflows/Diff_nucMACC'
 
 // Check mandatory parameters
 if (params.csvInput) { ch_csv = file(params.csvInput) } else { exit 1, 'Input samplesheet not found!' }
@@ -165,5 +166,13 @@ workflow{
                   sub_FASTQ_entry(sampleSingle_ch,samplePair_ch,samples_conc)
                   common_nucMACC(sub_FASTQ_entry.out[0], sub_FASTQ_entry.out[1], samples_conc)
                 }
+        }
+        if(params.analysis=='Diff_nucMACC'){
+          if (params.bamEntry == true){
+            Diff_nucMACC(bamEntry_mono, bamEntry_sub)
+          }
+          else{
+            println "Missing bamEntry param!"
+          }
         }
 }

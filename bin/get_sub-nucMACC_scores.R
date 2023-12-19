@@ -3,11 +3,9 @@
 #### PACKAGE LOADING ####
 library(LSD)
 library(rtracklayer)
-
 ############################################
 ######## DATA LOADING ###########
 args   <- commandArgs(TRUE)
-
 #read sample input file
 input<-read.csv(file=args[1])
 
@@ -16,8 +14,8 @@ readCounts <- read.delim(file = args[2],header = T)
 readCounts.Nucs<-read.delim(file = args[5],header = T)
 
 ## get lowest condition
-lowest.cond<-args[3]
-nucStats<-read.delim(args[4])
+lowest.cond<-gsub("-","\\.",args[3])
+
 
 #get total counts statistics
 featureCounts.mono<-read.delim(file=args[6])
@@ -42,13 +40,7 @@ count.table<-readCounts[,c(6:(ncol(readCounts)-2))]
 rownames(count.table)<-readCounts$nucID
 colnames(count.table)<-gsub("_sub.bam", "", colnames(count.table))
 
-### READ filtering based on raw reads in lowest concentration
-#raw reads threshold
-raw.flt<-5
 
-#filter
-idx.raw<-count.table[,lowest.cond]>=raw.flt
-real.subNucs <- count.table[idx.raw,]
 
 ### READ COUNT NORMALIZATION
 
@@ -56,15 +48,15 @@ real.subNucs <- count.table[idx.raw,]
 normFactor<-apply(featureCounts.sub[,c(-1)],2,sum)/1e6
 
 #Counts per million (normalization based on library size)
-normCounts<-t(t(real.subNucs)/normFactor[match(colnames(real.subNucs),
+normCounts<-t(t(count.table)/normFactor[match(colnames(count.table),
                                                names(normFactor))])
-
+rm(normFactor)
 ### REGRESSION
 
 #get corresponding MNase conc
-mx<-match(colnames(normCounts), input$Sample_Name)
+mx<-match(colnames(normCounts), gsub("-","\\.",input$Sample_Name))
 mnase_conc<-input[mx,"MNase_U"]
-
+rm(input)
 ## get pseudocount
 pseudocount<-median(apply(normCounts,2,median))
 
@@ -77,10 +69,9 @@ makeRegr <- function(x){
     R2<-summary(fit)$r.squared
     return(data.frame(slope,R2))
 }
-
-regr.list <- apply(normCounts, 1, makeRegr)    #Actual calculation of linear regression
+regr.list <- apply(normCounts,1 , makeRegr)   #Actual calculation of linear regression
 regr.results <-do.call(rbind, regr.list)
-
+rm(regr.list, normCounts)
 #####################################################
 ############# sub-nucMACC GC correction  ############
 #####################################################
@@ -161,7 +152,7 @@ subnucStats.full<-cbind(readCounts[,c("Chr", "Start","End", "Strand","GC_cont", 
                      "sub.nucMACC"=sub_nucMACC_scores[match(readCounts$nucID,
                                                             names(sub_nucMACC_scores))],
                      regr.results[match(readCounts$nucID,rownames(regr.results)),])
-
+rm(readCounts)
 #list filtered by raw read count and GC
 subnucStats<-subnucStats.full[!is.na(subnucStats.full$sub.nucMACC),]
 
@@ -178,9 +169,10 @@ write.table(bedgraph , file="sub-nucMACC_scores.bedgraph",
 #########################################
 
 #convert to GRanges
+nucStats<-read.delim(args[4])
 subnuc.gr<-GRanges(subnucStats)
 nuc.gr<-GRanges(nucStats)
-
+rm(nucStats)
 # get unique subnuc positions
 subNucs_unique  <- subsetByOverlaps(subnuc.gr,nuc.gr,
                                     minoverlap = 70,invert=TRUE)
@@ -199,7 +191,7 @@ nucMACC.ovrl<-nuc.gr[ovrlp@to]
 count.table.Nucs<-readCounts.Nucs[,c(6:(ncol(readCounts.Nucs)-2))]
 rownames(count.table.Nucs)<-readCounts.Nucs$nucID
 colnames(count.table.Nucs)<-gsub("_mono.bam", "", colnames(count.table.Nucs))
-
+rm(readCounts.Nucs)
 ##############################################################
 ########### norm by total filtered fragments per million #####
 
@@ -210,7 +202,7 @@ cpms.nuc<-count.table.Nucs[as.character(nucMACC.ovrl$nucID),lowest.cond]/nuc.tot
 names(cpms.nuc)<-as.character(nucMACC.ovrl$nucID)
 cpms.subnuc<-count.table[as.character(sub.nucMACC.ovrl$nucID),lowest.cond]/sub.total
 names(cpms.subnuc)<-as.character(sub.nucMACC.ovrl$nucID)
-
+rm(lowest.cond)
 #get enrichment in
 ratio<-log2(cpms.subnuc+0.01)-log2(cpms.nuc+0.01)
 

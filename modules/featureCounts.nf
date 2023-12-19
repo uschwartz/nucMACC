@@ -1,4 +1,5 @@
 process featureCounts_mono{
+	
         label 'big'
          if (params.container_engine == 'docker') {
                 containerOptions "-v \$(dirname ${params.genome}):\$(dirname ${params.genome})"
@@ -15,16 +16,26 @@ process featureCounts_mono{
 
         output:
         file("monoNucs_readCounts_wGC.csv")
-        file("monoNucs_readCounts.csv.summary")
+        file("monoNucs_readCounts_all.csv.summary")
 
         script:
         """
         featureCounts  -F SAF -a $saf \
-        -o monoNucs_readCounts.csv \
-        --fracOverlap 0.7 \
+        -o monoNucs_readCounts_all.csv \
+        --fracOverlap 0.65 \
         -T $task.cpus -p -B --largestOverlap \
         $monoNucs
 
+        
+
+        #filter by readcounts
+        awk -F'\t' 'NR > 2 { sum = 0; for (i = 7; i <= NF; i++) {sum += \$i;} if (sum >= $params.rawfilt_mono) { print; } }' monoNucs_readCounts_all.csv > monoNucs_readCounts_pre.csv
+        
+        #store first 2 lines as they get lost
+        awk 'NR <= 2' monoNucs_readCounts_all.csv > monoNucs_readCounts_head.csv
+
+        #readd first two lines
+        cat monoNucs_readCounts_head.csv monoNucs_readCounts_pre.csv > monoNucs_readCounts.csv
         #get number of columns
         numb=\$(cat monoNucs_readCounts.csv | awk 'NR > 2 {print NF; exit}')
         last_c=\$((\$numb-1))
@@ -66,19 +77,26 @@ process featureCounts_sub{
         input:
         file(saf)
         file(subNucs)
+        val(lowestcond)
 
         output:
         file("subNucs_readCounts_wGC.csv")
-        file("subNucs_readCounts.csv.summary")
+        file("subNucs_readCounts_all.csv.summary")
 
         script:
         """
         featureCounts  -F SAF -a $saf \
-        -o subNucs_readCounts.csv \
+        -o subNucs_readCounts_all.csv \
         --fracOverlap 0.7 \
         -T $task.cpus -p -B --largestOverlap \
         $subNucs
 
+
+        export lowest_cond_col=\$(awk -F'\t' 'NR == 2 { for (i = 1; i <= NF; i++) { if (\$i ~ /$lowestcond/) { j = i; break; } } } END { print j; }' subNucs_readCounts_all.csv)
+        awk -v col="\$lowest_cond_col" -v rawfilt="$params.rawfilt_sub" -F'\t' 'NR <= 2 || (\$col >= rawfilt) {print;}' subNucs_readCounts_all.csv > subNucs_readCounts.csv
+
+
+        
         #get number of columns
         numb=\$(cat subNucs_readCounts.csv | awk 'NR > 2 {print NF; exit}')
         last_c=\$((\$numb-1))
@@ -96,7 +114,7 @@ process featureCounts_sub{
           subNucs_readCounts.csv pre_subNucs_readCounts_wGC.csv > pre_subNucs_readCounts_wGC_ext.csv
 
         #prepare header
-        awk -v OFS='\t' 'FNR == 2 {print}' subNucs_readCounts.csv | cut -f 2-\$numb > header_featureCounts.csv
+        awk -v OFS='\t' 'FNR == 2 {print}' subNucs_readCounts_all.csv | cut -f 2-\$numb > header_featureCounts.csv
         echo "GC_cont\tnucID" | paste header_featureCounts.csv - > header_all.csv
 
         #add header

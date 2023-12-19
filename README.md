@@ -3,13 +3,19 @@
 **Original paper** - https://doi.org/10.1101/2022.12.29.521985
 
 ## Introduction
-nucMACC is an automated analysis pipeline for the analysis of nucleosome positions, accessibility and stability. The pipeline contains two main workflows:
+nucMACC is an automated analysis pipeline for the analysis of nucleosome positions, accessibility and stability. The pipeline contains thress main workflows:
 
 1. `MNaseQC` for QC and  exploratory analysis
 2. `nucMACC` for analysis of nucleosome positions, accessibility and stability
+3. `Diff_nucMACC` for differential analysis of accessibility and stability changes between two experimental conditions
 
 <p align="center">
 	<img src="docs/img/workflow.png" width="800" height="450">
+</p>
+
+
+<p align="center">
+    <img src="docs/img/workflow_diff.png" width="800" height="450">
 </p>
 
 Given trimmed paired-end sequencing reads in fastq format, this pipeline will run:
@@ -42,7 +48,15 @@ Given trimmed paired-end sequencing reads in fastq format, this pipeline will ru
     7. Correct for MNase GC-bias using LOWESS
     8. Identify hyper-/hypo-accessible nucleosomes or unstable and non-canoncical nucleosomes.
 
+* `Diff_nucMACC`specific
+    1. Create a reference map from hyper- and hypo-accesible mono-nucleosome positions and unstable and non-canonical sub-nucleosome positions
+    2. Count number of fragments using `featureCounts`
+    3. Differential analysis using `edgeR`
+    4. Classify positions as "gain" or "loss" of accesibility or stability
+
 `nucMACC` is meant to run on pooled replicates in fastq format, whereas `MNaseQC` uses single replicates. As the `MNaseQC` and the `nucMACC` workflow have several steps in common, it is recommended to run first `MNaseQC` and report the fragment size selected bam files using `--publishBamFlt`. Then setting `--bamEntry` option, a shorter version of the `nucMACC` workflow can be run using the generated bam files as input. Here in an additional step at the beginning replicates are pooled.
+
+`Diff_nucMACC` is meant to run on two experiments previously analysed by `nucMACC`. The setting `--bamEntry` is required to run the workflow.
 
 ## Get started
 
@@ -99,6 +113,19 @@ H4_100U,rep2,/toyData/monoNuc/H4_rep2_100U_cut_mono.bam,/toyData/subNuc/H4_rep2_
 ```
 Each row represents a pair of fastq files. Rows with the same sample name are considered technical replicates and pooled automatically. Only numerical values are allowed in the last column `MNase_U`. Duration of MNase experiment could be used as well, if the MNase concentration was constant in the experiments, but the time of digestion differed. It is recommended to use the output of `MNaseQC` workflow, which can be obtained specifying `--publishBamFlt`. However, it is as well possible to enter the pipeline at this point with manually processed bam files.
 
+* `Diff_nucMACC --bamEntry` (imaginary example)
+```csv
+Sample_Name,replicate,path_mono,path_sub,MNase_U,path_analysis,Type
+H4_rep1_6.25U,rep1,/toyData/monoNuc/H4_rep1_6.25U_cut_mono.bam,/toyData/subNuc/H4_rep1_6.25U_cut_sub.bam,6.25,/nucMACC_H4,H4
+H4_rep2_6.25U,rep2,/toyData/monoNuc/H4_rep2_6.25U_cut_mono.bam,/toyData/subNuc/H4_rep2_6.25U_cut_sub.bam,6.25,/nucMACC_H4,H4
+H4_rep1_100U,rep1,/toyData/monoNuc/H4_rep1_100U_cut_mono.bam,/toyData/subNuc/H4_rep1_100U_cut_sub.bam,100,/nucMACC_H4,H4
+H4_rep2_100U,rep2,/toyData/monoNuc/H4_rep2_100U_cut_mono.bam,/toyData/subNuc/H4_rep2_100U_cut_sub.bam,100,/nucMACC_H4,H4
+WT_rep1_6.25U,rep1,/toyData/monoNuc/WT_rep1_6.25U_cut_mono.bam,/toyData/subNuc/WT_rep1_6.25U_cut_sub.bam,6.25,/nucMACC_WT,WT
+WT_rep2_6.25U,rep2,/toyData/monoNuc/WT_rep2_6.25U_cut_mono.bam,/toyData/subNuc/WT_rep2_6.25U_cut_sub.bam,6.25,/nucMACC_WT,WT
+WT_rep1_100U,rep1,/toyData/monoNuc/WT_rep1_100U_cut_mono.bam,/toyData/subNuc/WT_rep1_100U_cut_sub.bam,100,/nucMACC_WT,WT
+WT_rep2_100U,rep2,/toyData/monoNuc/WT_rep2_100U_cut_mono.bam,/toyData/subNuc/WT_rep2_100U_cut_sub.bam,100,/nucMACC_WT,WT
+
+```
 
 * nucMACC (example `toyData/input.csv`)
 
@@ -139,8 +166,18 @@ nextflow run path2nucMACC/nucMACC \
         --bamEntry \
         --TSS 'genes.gtf'
 ```
-All options, except `--TSS`, are required.   
+All options, except `--TSS`, are required.  
 
+ 
+* `Diff_nucMACC`
+```bash
+nextflow run path2nucMACC/nucMACC \
+        --analysis 'Diff_nucMACC' \
+        --csvInput 'input_diff.csv' \
+        --outDir <OUTDIR> \
+        --bamEntry
+```
+All options are required.
 
 ## Get help
 

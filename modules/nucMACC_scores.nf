@@ -1,4 +1,5 @@
 process nucMACC_scores{
+  label 'bigCPU'
   container 'uschwartz/r_nucmacc:v3.1'
 
   publishDir "${params.outDir}/RUN/05_nucMACC", mode: 'copy'
@@ -18,11 +19,12 @@ process nucMACC_scores{
 
   script:
   """
-  get_nucMACC_scores.R $input $readCounts $counts_sum_mono
+  get_nucMACC_scores.R $input $readCounts $counts_sum_mono $task.cpus
   """
 }
 
 process sub_nucMACC_scores{
+  label 'bigCPU'
   container 'uschwartz/r_nucmacc:v3.1'
 
   publishDir "${params.outDir}/RUN/06_sub-nucMACC", mode: 'copy'
@@ -46,6 +48,6 @@ process sub_nucMACC_scores{
 
   script:
   """
-  get_sub-nucMACC_scores.R $input $readCounts $minConc $nucMACC_table $readCounts_nucs $counts_sum_mono $counts_sum_sub
+  get_sub-nucMACC_scores.R $input $readCounts $minConc $nucMACC_table $readCounts_nucs $counts_sum_mono $counts_sum_sub $task.cpus
   """
 }
