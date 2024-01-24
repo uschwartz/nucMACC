@@ -1,4 +1,7 @@
 process alignment{
+  
+  containerOptions "-v \$(dirname ${params.genomeIdx}):\$(dirname ${params.genomeIdx})"
+  
   label 'bigCPU'
   memory { params.genomeSize > 200000000 ? params.high_memory : params.low_memory}
   publishDir "${params.outDir}/QC/02_ALIGNMENT", mode: 'copy', pattern: "*_alignment_stats.txt"

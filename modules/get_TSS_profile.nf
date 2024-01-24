@@ -1,4 +1,6 @@
 process TSS_profile_mono{
+  containerOptions "-v \$(dirname ${params.TSS}):\$(dirname ${params.TSS})"
+  
   label 'mid'
 
   input:
@@ -38,6 +40,7 @@ process TSS_profile_plot_mono{
 }
 
 process TSS_profile_sub{
+  containerOptions "-v \$(dirname ${params.TSS}):\$(dirname ${params.TSS})"
   label 'mid'
 
   input:
