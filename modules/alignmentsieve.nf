@@ -1,4 +1,5 @@
 process sieve_mono{
+  container 'uschwartz/deeptools_samtools:v1.0'
   if(params.blacklist){
   containerOptions "-v \$(dirname ${params.blacklist}):\$(dirname ${params.blacklist})"
   }
@@ -27,6 +28,7 @@ process sieve_mono{
 }
 
 process sieve_sub{
+  container 'uschwartz/deeptools_samtools:v1.0'
   if(params.blacklist){
   containerOptions "-v \$(dirname ${params.blacklist}):\$(dirname ${params.blacklist})"
   }
