@@ -8,7 +8,7 @@ process sieve_mono{
   publishDir "${params.outDir}/RUN/00_ALIGNMENT/monoNuc", mode: 'copy', pattern: "*_mono.bam", enabled:params.publishBamFlt
 
   input:
-  tuple val(sampleID), val(bam)
+  tuple val(sampleID), file(bam), file(idx)
 
   output:
   tuple val(sampleID), file("*_mono_FiltLog.txt")
@@ -37,7 +37,7 @@ process sieve_sub{
   publishDir "${params.outDir}/RUN/00_ALIGNMENT/subNuc", mode: 'copy', pattern: "*_sub.bam", enabled:params.publishBamFlt
 
   input:
-  tuple val(sampleID), val(bam)
+  tuple val(sampleID), file(bam), file(idx)
 
   output:
   tuple val(sampleID), file("*_sub_FiltLog.txt")

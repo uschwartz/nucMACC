@@ -1,7 +1,7 @@
 process alignment{
-  
+
   containerOptions "-v \$(dirname ${params.genomeIdx}):\$(dirname ${params.genomeIdx})"
-  
+
   label 'bigCPU'
   memory { params.genomeSize > 200000000 ? params.high_memory : params.low_memory}
   publishDir "${params.outDir}/QC/02_ALIGNMENT", mode: 'copy', pattern: "*_alignment_stats.txt"
@@ -13,7 +13,7 @@ process alignment{
 
   output:
   file "*_alignment_stats.txt"
-  tuple val(sampleID), file("*_aligned.bam")
+  tuple val(sampleID), file("*_aligned.bam"), file("*_aligned.bam.bai")
   tuple val(sampleID), file("*_alignment_stats.txt")
 
   script:

@@ -5,7 +5,7 @@ process qualimap {
   publishDir "${params.outDir}/QC/03_QUALIMAP", mode: 'copy'
 
   input:
-  tuple val(sampleID), file(bam)
+  tuple val(sampleID), file(bam), file(idx)
 
   output:
   file "${sampleID}"
