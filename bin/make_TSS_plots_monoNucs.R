@@ -53,8 +53,8 @@ for(i in names){
 
 
 
-pdf("profile_monoNucs.pdf", width = 7, height=4)
-par(mar=c(5.1, 4.1, 4.1, 11.8))
+pdf("profile_monoNucs.pdf", width = 7.5, height=4)
+par(mar=c(5.1, 4.1, 4.1, 14.3))
 for(i in 1:length(names)){
     if(i==1){
         plot(pos,
@@ -69,10 +69,10 @@ for(i in 1:length(names)){
               col=dark2[i],lwd=2)
     }
 }
-legend("topright",bty="n",
-       legend=names, 
+legend(1600,high+(high-low)/10, bty="n",
+       legend=names,
        col=dark2[1:length(names)], lwd=2,
-       inset=c(-0.37,0), xpd=TRUE)
+       xpd=TRUE)
 dev.off()
 
 
