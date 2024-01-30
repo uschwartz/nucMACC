@@ -32,8 +32,9 @@ process featureCounts_mono{
         | awk -v OFS='\t' 'NR > 1 {print}'  > pre_monoNucs_readCounts_wGC.csv
 
         #add nucID
-        awk -v OFS='\t' 'NR > 2 {print \$1}' monoNucs_readCounts.csv \
-        | paste pre_monoNucs_readCounts_wGC.csv - >pre_monoNucs_readCounts_wGC_ext.csv
+        awk 'BEGIN {FS=OFS="\\t"} NR==FNR {if (FNR <= 2) next; key=\$2 FS \$3 FS \$4; geneid[key]=\$1; next} \
+         {key=\$1 FS \$2 FS \$3; if (key in geneid) print \$0, geneid[key]; else print \$0, "NA"}' \
+          monoNucs_readCounts.csv pre_monoNucs_readCounts_wGC.csv > pre_monoNucs_readCounts_wGC_ext.csv
 
         #prepare header
         awk -v OFS='\t' 'FNR == 2 {print}' monoNucs_readCounts.csv | cut -f 2-\$numb > header_featureCounts.csv
@@ -78,9 +79,11 @@ process featureCounts_sub{
         | bedtools nuc -fi $params.genome -bed - | cut -f 1-\$last_c,\$gc_c \
         | awk -v OFS='\t' 'NR > 1 {print}'  > pre_subNucs_readCounts_wGC.csv
 
+
         #add nucID
-        awk -v OFS='\t' 'NR > 2 {print \$1}' subNucs_readCounts.csv \
-        | paste pre_subNucs_readCounts_wGC.csv - >pre_subNucs_readCounts_wGC_ext.csv
+        awk 'BEGIN {FS=OFS="\\t"} NR==FNR {if (FNR <= 2) next; key=\$2 FS \$3 FS \$4; geneid[key]=\$1; next} \
+         {key=\$1 FS \$2 FS \$3; if (key in geneid) print \$0, geneid[key]; else print \$0, "NA"}' \
+          subNucs_readCounts.csv pre_subNucs_readCounts_wGC.csv > pre_subNucs_readCounts_wGC_ext.csv
 
         #prepare header
         awk -v OFS='\t' 'FNR == 2 {print}' subNucs_readCounts.csv | cut -f 2-\$numb > header_featureCounts.csv
