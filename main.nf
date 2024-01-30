@@ -116,11 +116,47 @@ include{MNaseQC} from './workflows/MNaseQC'
 include{sub_bamEntry; sub_FASTQ_entry; common_nucMACC} from './workflows/nucMACC'
 
 
+// Check mandatory parameters
+if (params.csvInput) { ch_csv = file(params.csvInput) } else { exit 1, 'Input samplesheet not found!' }
+
+if (params.TSS) {ch_TSS = file (params.TSS)}
+      if(params.TSS){
+        if (ch_TSS.isEmpty()) { exit 1, 'TSS file not found!'}
+        }
+
+if (params.blacklist) {ch_blacklist = file (params.blacklist)}
+      if(params.blacklist){
+        if (ch_blacklist.isEmpty()) { exit 1, 'Blacklist file not found!'}
+        }
+  if(params.analysis =='MNaseQC'){
+    if (params.genomeIdx) { ch_idx = file(params.genomeIdx).parent } 
+    if (ch_idx.isEmpty()) { exit 1, 'Folder containing bowtie2 indices not found!'}
+  }
+
+  if(params.analysis=='nucMACC'){
+    if(params.bamEntry == true){
+
+    if (params.genome) { ch_genome = file(params.genome)}
+    if (ch_genome.isEmpty()) { exit 1, 'Genome fasta not found!'}
+
+    }
+    else {
+      if (params.genomeIdx) { ch_idx = file(params.genomeIdx).parent } 
+    if (ch_idx.isEmpty()) { exit 1, 'Folder containing bowtie2 indices not found!'}
+      if (params.genome) { ch_genome = file(params.genome)}
+    if (ch_genome.isEmpty()) { exit 1, 'Genome fasta not found!'}}
+    }
+  
+  
+
 workflow{
         if(params.analysis=='MNaseQC'){
                 MNaseQC(sampleSingle_ch,samplePair_ch,samples_conc)
         }
         if(params.analysis=='nucMACC'){
+    
+
+
                 if (params.bamEntry == true) {
                   sub_bamEntry(bamEntry_mono,bamEntry_sub)
                   common_nucMACC(sub_bamEntry.out[0], sub_bamEntry.out[1], samples_conc)
