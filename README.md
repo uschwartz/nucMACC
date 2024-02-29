@@ -24,7 +24,7 @@ Given trimmed paired-end sequencing reads in fastq format, this pipeline will ru
         2. Sub-nucleosome (< 140 bp)
     6. Report fragment statistics of each processing step
     7. Create nucleosome maps of Mono- and Sub-nucleosomes using `DANPOS`
-    8. Optionally create TSS profiles using `deepTools`
+    8. Optionally create TSS profiles using `deepTools computeMatrix`
     9. Summary reports using `MultiQC`
 
 
@@ -53,6 +53,7 @@ Given trimmed paired-end sequencing reads in fastq format, this pipeline will ru
 * For large reference genomes the pipeline requires at least 32 GB memory and default settings allocate 45 GB memory to demanding processes. Memory usage can be adjusted using the option `--high_memory` or directly in the [`nextflow.config`](https://www.nextflow.io/docs/latest/basic.html).
 * The pipeline requires paired-end sequencing data
 * Bowtie2 index of reference genome, reference genome in fasta format and the length of the mappable genome.
+* For details about the GTF file format required for TSS plots, see the documentation of [`deeptools computeMatrix`](https://deeptools.readthedocs.io/en/develop/content/tools/computeMatrix.html). For further customisation of TSS plots we recommend direct use of the deepTools package and the bigwig files provided by the pipeline.   
 
 ### Installation
 You can obtain the pipeline directly from GitHub:

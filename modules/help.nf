@@ -24,7 +24,7 @@ def helpMessage() {
 
     Additional options:
       --blacklist           [string] A BED file containing regions that should be excluded from all nucleosome analysis (default: false)
-      --TSS                 [string] A Transcript annotation file in GTF format to obtain TSS profiles (default: false)
+      --TSS                 [string] A Transcript annotation file in GTF format to obtain TSS profiles. For more details about TSS format see documentation of deeptools computeMatrix, which is used here (default: false)
       --publishBam          [boolean]if set, aligned bam files will be written to outDir (default: false)
       --publishBamFlt       [boolean]if set, size selected bam files will be written to outDir (default: false)
 
