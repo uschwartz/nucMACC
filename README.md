@@ -156,4 +156,4 @@ Uwe Schwartz: uwe.schwartz@ur.de
 
 ## Cite
 
-Wernig-Zorc et al., 2023, nucMACC: An optimized MNase-seq pipeline measures genome-wide nucleosome accessibility and stability. bioRxiv (https://doi.org/10.1101/2022.12.29.521985)
+Sara Wernig-Zorc et al. ,nucMACC: An MNase-seq pipeline to identify structurally altered nucleosomes in the genome.Sci. Adv.10,eadm9740(2024).DOI: 10.1126/sciadv.adm9740 (https://doi.org/10.1126/sciadv.adm9740)
