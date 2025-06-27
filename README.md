@@ -49,7 +49,7 @@ Given trimmed paired-end sequencing reads in fastq format, this pipeline will ru
 ### Requirements
 
 * `Docker` or `Singularity` and `nextflow` are required to run the nucMACC pipeline. Additional software used in the pipeline is packaged in Docker container and will be automatically downloaded during the first execution of the pipeline.
-* `Docker` is the default profile. Use `--container_engine singualrity` to run it on `Singularity`
+* `Docker` is the default profile. Use `--container_engine singularity` to run it on `Singularity`
 * The pipeline is compatible with all computational infrastructures. Executing the pipeline on cloud or HPC systems may require to adapt the [`nextflow.config`](https://www.nextflow.io/docs/latest/basic.html).
 * For large reference genomes the pipeline requires at least 32 GB memory and default settings allocate 45 GB memory to demanding processes. Memory usage can be adjusted using the option `--high_memory` or directly in the [`nextflow.config`](https://www.nextflow.io/docs/latest/basic.html).
 * The pipeline requires paired-end sequencing data
