@@ -12,6 +12,7 @@ def settings() {
                   analysis         :  ${params.analysis}
                   test             :  ${params.test}
                   genomeSize       :  ${params.genomeSize}
+                  container_engine :  ${params.container_engine}
 
                   Path variables used in analysis:
                   csvInput         :  ${params.csvInput}

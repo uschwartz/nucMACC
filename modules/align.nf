@@ -1,6 +1,8 @@
 process alignment{
 
-  containerOptions "-v \$(dirname ${params.genomeIdx}):\$(dirname ${params.genomeIdx})"
+  if (params.container_engine == 'docker') {
+    containerOptions "-v \$(dirname ${params.genomeIdx}):\$(dirname ${params.genomeIdx})"
+  }
 
   label 'bigCPU'
   memory { params.genomeSize > 200000000 ? params.high_memory : params.low_memory}

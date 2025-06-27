@@ -13,8 +13,9 @@ def helpMessage() {
 
     General options:
       --analysis            [string] type of analysis (default: nucMACC; possible inputs: "nucMACC" or "MNaseQC")
-      --test                [boolean]if set, test run will be perfomed with toyData instead; csvInput for "bamEntry" needs to be created prior! (default: false)
+      --test                [boolean] if set, test run will be perfomed with toyData instead; csvInput for "bamEntry" needs to be created prior! (default: false)
       --genomeSize          [integer] Effective genome size, defined as the length of the mappable genome. Used for normalisation (default: 162367812 (dm3))
+      --container_engine    [string] Container engine to use (default: docker; possible inputs: "docker" or "singularity")
 
     Path variables used in analysis:
       --csvInput            [string] Path to comma-separated file containing information about the samples in the experiment (see ./toyData/input.csv as example) template provided in ./input_template.csv
