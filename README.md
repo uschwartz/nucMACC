@@ -67,6 +67,11 @@ The pipeline comes with a ready-to-use test data set.
 ```bash
 nextflow run path2nucMACC/nucMACC --test
 ```
+Since nextflow version 26.04.0 strict syntax is enabled by default. To run the pipeline with nextflow version 26 or higher use
+
+```bash
+NXF_SYNTAX_PARSER=v1 nextflow run <path2nucDetective>/nucDetective/ --test
+```
 
 ### Usage
 We recommend to use first the `MNaseQC` workflow and specifying `--publishBamFlt`. Then take the output and run `nucMACC` with `--bamEntry` option.  
