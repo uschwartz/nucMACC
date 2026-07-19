@@ -2,6 +2,8 @@ process danpos_mono{
   container 'uschwartz/danpos'
   memory { params.genomeSize > 200000000 ? params.high_memory : params.low_memory}
   publishDir "${params.outDir}/RUN/01_MONO-NUCS_PROFILE", mode: 'copy', pattern: "*_monoNucs_profile.bw"
+  publishDir "${params.outDir}/RUN/01_MONO-NUCS_PROFILE/wig", mode: 'copy', pattern: "result/pooled/*.wig", saveAs: { filename -> filename.tokenize('/').last() }
+
 
   input:
   tuple val(sampleID), file(bam)
@@ -9,6 +11,7 @@ process danpos_mono{
 
   output:
   file("*_monoNucs_profile.bw")
+  file("result/pooled/*.wig")
   tuple val(sampleID), file("result/pooled/*.xls")
 
 
@@ -25,6 +28,7 @@ process danpos_sub{
   container 'uschwartz/danpos'
   memory { params.genomeSize > 200000000 ? params.high_memory : params.low_memory}
   publishDir "${params.outDir}/RUN/02_SUB-NUCS_PROFILE", mode: 'copy', pattern: "*_subNucs_profile.bw"
+  publishDir "${params.outDir}/RUN/02_SUB-NUCS_PROFILE/wig", mode: 'copy', pattern: "result/pooled/*.wig", saveAs: { filename -> filename.tokenize('/').last() }
 
   input:
   tuple val(sampleID), file(bam)
@@ -32,6 +36,7 @@ process danpos_sub{
 
   output:
   file("*_subNucs_profile.bw")
+  file("result/pooled/*.wig")
   tuple val(sampleID), file("result/pooled/*.xls")
 
   script:
